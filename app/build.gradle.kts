@@ -49,6 +49,9 @@ android {
 }
 
 dependencies {
+    implementation(project(":common"))
+    implementation(project(":app_features:main_feature"))
+
     // Kotlin coroutines with lifecycle
     implementation(libs.bundles.lifecycle)
 

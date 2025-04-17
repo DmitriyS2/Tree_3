@@ -38,6 +38,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":app_features:base_feature"))
 
     // Dagger Hilt
     implementation(libs.hilt.android)
