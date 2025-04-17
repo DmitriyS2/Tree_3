@@ -3,6 +3,7 @@ package com.sdv.main_feature.presentation
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -15,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sdv.main_feature.presentation.MainContract.State
 import com.sdv.main_feature.presentation.MainContract.Action
@@ -24,11 +26,11 @@ import com.sdv.main_feature.presentation.MainContract.Action
 internal fun MainScreen(
     state: State,
     onAction: (Action) -> Unit,
-    modifier: Modifier,
+    padding: PaddingValues,
 ) {
 
     Scaffold(
-        modifier = modifier,
+        modifier = Modifier.fillMaxSize(),
         floatingActionButton = {
             FloatingActionButton(
                 content = {
@@ -40,15 +42,15 @@ internal fun MainScreen(
         },
         floatingActionButtonPosition = FabPosition.End,
         contentColor = Color.Black,
-        containerColor = Color.Magenta
+        containerColor = Color.LightGray
     ) {
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
               //  .background(Green100)
         ) {
             Column(
-                modifier = Modifier.padding(20.dp)
+                modifier = Modifier.padding(top=padding.calculateTopPadding())
             ) {
                 Text(
                 //    color = Orange100,
@@ -104,4 +106,14 @@ internal fun MainScreen(
 
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewScreen() {
+    MainScreen(
+        state = State(),
+        onAction = {},
+        padding = PaddingValues(0.dp)
+    )
 }

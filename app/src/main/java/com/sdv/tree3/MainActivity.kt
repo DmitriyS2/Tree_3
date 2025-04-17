@@ -32,7 +32,8 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = Routes.Main.route
                     ) {
-                        composable(Routes.Main.route) { MainFeatureRoute(padding = innerPadding) }
+                        composable(Routes.Main.route) { MainFeatureRoute(padding = innerPadding
+                        ) }
                     }
                 }
             }

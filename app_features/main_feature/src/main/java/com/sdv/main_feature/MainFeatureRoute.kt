@@ -10,7 +10,9 @@ import com.sdv.main_feature.presentation.MainScreen
 import com.sdv.main_feature.presentation.MainViewModel
 
 @Composable
-fun MainFeatureRoute(padding: PaddingValues) {
+fun MainFeatureRoute(
+    padding: PaddingValues
+) {
 
     val viewModel: MainViewModel = hiltViewModel()
     val state = viewModel.state.collectAsState()
@@ -18,6 +20,6 @@ fun MainFeatureRoute(padding: PaddingValues) {
     MainScreen(
         state = state.value,
         onAction = { viewModel.handleEvent(it) },
-        modifier = Modifier.padding(padding)
+        padding = padding,
     )
 }
