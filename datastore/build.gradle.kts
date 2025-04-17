@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -30,6 +32,14 @@ android {
 }
 
 dependencies {
+
+    // Dagger Hilt
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.viewmodel.android)
+    ksp(libs.hilt.compiler)
+
+    // DataStore
+    implementation(libs.bundles.datastore)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
