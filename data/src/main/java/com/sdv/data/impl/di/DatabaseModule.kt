@@ -1,7 +1,7 @@
-package com.sdv.datastore.impl.di
+package com.sdv.data.impl.di
 
-import com.sdv.datastore.DataStorage
-import com.sdv.datastore.impl.DataStorageImpl
+import com.sdv.data.DatabaseApi
+import com.sdv.data.impl.DatabaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -10,9 +10,9 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal interface DataStorageModule {
+internal interface DatabaseModule {
 
     @Singleton
     @Binds
-    fun bindDataStorage(impl: DataStorageImpl): DataStorage
+    fun bindDatabaseModule(impl: DatabaseImpl): DatabaseApi
 }
