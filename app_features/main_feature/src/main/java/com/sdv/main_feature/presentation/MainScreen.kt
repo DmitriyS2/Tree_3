@@ -100,7 +100,7 @@ internal fun MainScreen(
                     )
 
                 LazyColumn() {
-                    itemsIndexed(state.currentParent.parents) { _, item ->
+                    itemsIndexed(state.currentParent?.parents.orEmpty()) { _, item ->
 //                        ShowCardItem(
 //                            child = true,
 //                            padding = 16,

@@ -1,28 +1,18 @@
 package com.sdv.main_feature.di
 
-import com.sdv.main_feature.data.mapper.MapperUI
-import com.sdv.main_feature.data.repo.NodeRepository
-import com.sdv.main_feature.data.repo.NodeRepositoryImpl
+import com.sdv.main_feature.data.repo.MainRepository
+import com.sdv.main_feature.data.repo.MainRepositoryImpl
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal abstract class RepositoryModule {
+internal interface RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindsLoginRepository(impl: NodeRepositoryImpl): NodeRepository
-
-    companion object {
-    @Provides
-    @Singleton
-    fun provideMapperUi(nodeRepository: NodeRepository): MapperUI {
-        return MapperUI(nodeRepository)
-    }
-}
+    fun bindsMainRepository(impl: MainRepositoryImpl): MainRepository
 }

@@ -9,6 +9,6 @@ internal data class NodeEntity(
     val id: Long,
     val name: String = "",
     val idParent: Long,
-    val parents: String = "0",
+    val parents: String = "",
     val children:String = "",
 )

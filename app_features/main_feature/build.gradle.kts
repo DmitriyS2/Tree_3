@@ -40,11 +40,16 @@ android {
 dependencies {
     implementation(project(":app_features:base_feature"))
     implementation(project(":domain"))
+    implementation(project(":data"))
+    implementation(project(":datastore"))
 
     // Dagger Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.viewmodel.android)
     ksp(libs.hilt.compiler)
+
+    // DataStore
+    implementation(libs.bundles.datastore)
 
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
