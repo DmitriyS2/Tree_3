@@ -13,23 +13,27 @@ internal class AddNodeUseCaseImpl @Inject constructor(
 
     override suspend fun invoke(nodeUI: NodeUI) {
         //вставка ребенка
+        val tempParents:MutableList<Long> = mutableListOf()
+        tempParents.addAll(nodeUI.children)
+        tempParents.add(nodeUI.id)
         val newNodeUI = NodeUI(
             name = encrypt(mainRepository.getMaxId().first().toString()),
             idParent = nodeUI.id,
-            parents = nodeUI.parents,
+            parents = tempParents.toList(),
             children = emptyList()
         )
         val newNodeUIid = mainRepository.insert(newNodeUI)
+
         // доб нового ребенка в children у родителя
-        val temp:MutableList<Long> = mutableListOf()
-        temp.addAll(nodeUI.children)
-        temp.add(newNodeUIid)
+        val tempChildren:MutableList<Long> = mutableListOf()
+        tempChildren.addAll(nodeUI.children)
+        tempChildren.add(newNodeUIid)
         val oldNodeUI = NodeUI(
             id = nodeUI.id,
             name = nodeUI.name,
             idParent = nodeUI.idParent,
             parents = nodeUI.parents,
-            children = temp.toList()
+            children = tempChildren.toList()
         )
         mainRepository.insert(oldNodeUI)
     }

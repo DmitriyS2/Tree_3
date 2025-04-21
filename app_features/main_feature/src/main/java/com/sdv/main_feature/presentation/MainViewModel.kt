@@ -1,8 +1,13 @@
 package com.sdv.main_feature.presentation
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.sdv.base_feature.MviViewModel
 import com.sdv.datastore.DataStorage
+import com.sdv.main_feature.domain.model.NodeUI
+import com.sdv.main_feature.domain.usecase.AddNodeUseCase
+import com.sdv.main_feature.domain.usecase.GetChildrenForParentByIdUseCase
+import com.sdv.main_feature.domain.usecase.GetNodeByIdUseCase
 import com.sdv.main_feature.presentation.MainContract.Action
 import com.sdv.main_feature.presentation.MainContract.State
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,10 +17,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class MainViewModel @Inject constructor(
-     private val dataStorage: DataStorage,
-//    private val addNodeUseCase: AddNodeUseCase,
-//    private val getNodeByIdUseCase: GetNodeByIdUseCase,
-//    private val getChildrenForParentByIdUseCase: GetChildrenForParentByIdUseCase,
+    private val dataStorage: DataStorage,
+    private val addNodeUseCase: AddNodeUseCase,
+    private val getNodeByIdUseCase: GetNodeByIdUseCase,
+    private val getChildrenForParentByIdUseCase: GetChildrenForParentByIdUseCase,
 ) : MviViewModel<State, Action>() {
 
     init {
@@ -37,13 +42,18 @@ internal class MainViewModel @Inject constructor(
     private fun loadData() {
         viewModelScope.launch {
             val currentParentId = dataStorage.currentParent.first()
-//            var currentParent = getNodeByIdUseCase(currentParentId)
-//            if(currentParent==null) {
-//                addNodeUseCase(NodeUI())
-//                currentParent = getNodeByIdUseCase(currentParentId)
-//            }
-//            val currentChildren = getChildrenForParentByIdUseCase(currentParentId)
-//            setState { it.copy(currentParent = currentParent, currentChildren = currentChildren) }
+            Log.d("MyLog", "currentParentId=$currentParentId")
+            var currentParent = getNodeByIdUseCase(currentParentId)
+            Log.d("MyLog", "currentParent1=$currentParent")
+            if(currentParent==null) {
+                Log.d("MyLog", "currentParent=null if")
+                addNodeUseCase(NodeUI())
+                currentParent = getNodeByIdUseCase(currentParentId)
+                Log.d("MyLog", "currentParent2=$currentParent")
+            }
+            val currentChildren = getChildrenForParentByIdUseCase(currentParentId)
+            Log.d("MyLog", "currentChildren=$currentChildren")
+            setState { it.copy(currentParent = currentParent, currentChildren = currentChildren) }
         }
     }
 }

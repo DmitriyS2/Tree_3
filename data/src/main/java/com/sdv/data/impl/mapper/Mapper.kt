@@ -20,12 +20,18 @@ internal fun NodeEntity.toModel() = Node(
 
 internal fun listToString(list: List<Long>) = list.joinToString(",")
 
-internal fun stringToList(str: String) = str
-    .split(",")
-    .toList()
-    .map {
-        it.toLong()
+internal fun stringToList(str: String): List<Long> {
+   return try {
+        str
+            .split(",")
+            .toList()
+            .map {
+                it.toLong()
+            }
+    } catch (e:Exception) {
+        emptyList()
     }
+}
 
 internal fun List<NodeEntity>.toModel(): List<Node> = this.map{ nodeEntity ->
     nodeEntity.toModel()

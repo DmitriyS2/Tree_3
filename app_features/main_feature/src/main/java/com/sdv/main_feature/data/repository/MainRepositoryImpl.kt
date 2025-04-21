@@ -36,6 +36,6 @@ internal class MainRepositoryImpl @Inject constructor(
     }
 
     override fun getMaxId(): Flow<Long> {
-        TODO("Not yet implemented")
+        return databaseApi.getMaxId()
     }
 }
