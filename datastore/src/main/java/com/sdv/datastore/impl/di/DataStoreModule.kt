@@ -21,7 +21,7 @@ import javax.inject.Singleton
 @FlowPreview
 @Module
 @InstallIn(SingletonComponent::class)
-internal interface DataStoreModule {
+internal class DataStoreModule {
 
     companion object {
         const val USER_PREFERENCE = "user_data_store_preference"

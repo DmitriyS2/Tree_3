@@ -18,6 +18,6 @@ fun MainFeatureRoute(padding: PaddingValues) {
     MainScreen(
         state = state.value,
         onAction = { viewModel.handleEvent(it) },
-        modifier = Modifier.padding(padding)
+        padding = padding,
     )
 }
