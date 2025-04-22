@@ -39,6 +39,10 @@ android {
 
 dependencies {
     implementation(project(":app_features:base_feature"))
+    implementation(project(":domain"))
+    implementation(project(":data"))
+    implementation(project(":datastore"))
+    implementation(project(":common"))
 
     // Dagger Hilt
     implementation(libs.hilt.android)
