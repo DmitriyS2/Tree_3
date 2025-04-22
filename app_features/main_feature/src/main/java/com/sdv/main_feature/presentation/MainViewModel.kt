@@ -33,9 +33,9 @@ internal class MainViewModel @Inject constructor(
 
     override fun handleEvent(action: Action) {
         when (action) {
-            Action.OnClickAddChild -> {addChild()}
-            is Action.OnClickGoToParent -> {}
-            is Action.OnClickGoToChildren -> TODO()
+            Action.OnClickAddChild -> addChild()
+            Action.OnClickGoToParent -> goToParent()
+            is Action.OnClickGoToChildren -> goToChildren(action.nodeUI)
             is Action.OnClickDeleteChildren -> TODO()
             is Action.OnClickDeleteParent -> TODO()
         }
@@ -47,9 +47,8 @@ internal class MainViewModel @Inject constructor(
             Log.d("MyLog", "currentParentId=$currentParentId")
             var currentParent = getNodeByIdUseCase(currentParentId)
             Log.d("MyLog", "currentParent1=$currentParent")
-            if(currentParent==null) {
+            if (currentParent == null) {
                 Log.d("MyLog", "currentParent=null if")
-             //   addNodeUseCase(NodeUI())
                 setFirstParentUseCase()
                 currentParent = getNodeByIdUseCase(currentParentId)
                 Log.d("MyLog", "currentParent2=$currentParent")
@@ -66,6 +65,26 @@ internal class MainViewModel @Inject constructor(
             val currentChildren = getChildrenForParentByIdUseCase(state.value.currentParent?.id ?: 0)
             val currentParent = getNodeByIdUseCase(state.value.currentParent?.id ?: 0)
             setState { it.copy(currentParent = currentParent, currentChildren = currentChildren) }
+        }
+    }
+
+    private fun goToParent() {
+        viewModelScope.launch {
+            val newParentId = state.value.currentParent?.idParent ?: 0
+            val currentParent = getNodeByIdUseCase(newParentId)
+            val currentChildren = getChildrenForParentByIdUseCase(newParentId)
+            setState { it.copy(currentParent = currentParent, currentChildren = currentChildren) }
+            dataStorage.setCurrentParent(newParentId)
+        }
+    }
+
+    private fun goToChildren(nodeUI: NodeUI) {
+        viewModelScope.launch {
+            val newParentId = nodeUI.id
+            val currentParent = getNodeByIdUseCase(newParentId)
+            val currentChildren = getChildrenForParentByIdUseCase(newParentId)
+            setState { it.copy(currentParent = currentParent, currentChildren = currentChildren) }
+            dataStorage.setCurrentParent(newParentId)
         }
     }
 }

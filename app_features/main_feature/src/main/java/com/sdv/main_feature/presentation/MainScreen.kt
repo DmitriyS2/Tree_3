@@ -73,7 +73,9 @@ internal fun MainScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp)
-                    .clickable {  },
+                    .clickable {
+                        onAction.invoke(Action.OnClickGoToParent)
+                    },
                 colors = CardDefaults.cardColors(
                     containerColor = Color.Yellow,
                     contentColor = Color.Black
@@ -94,10 +96,10 @@ internal fun MainScreen(
                             contentDescription = "Удалить родителя",
                             tint = Color.Red)
                     }
-                    Text(fontSize = 10.sp, text="Номер: ${state.currentParent?.id ?: ""}")
-                    Text(fontSize = 10.sp, text="Имя: ${state.currentParent?.name ?: ""}")
-                    Text(fontSize = 10.sp, text="Количество родителей: ${state.currentParent?.countParent ?: ""}")
-                    Text(fontSize = 10.sp, text="Количество детей: ${state.currentParent?.countChildren ?: ""}")
+                    Text(fontSize = 12.sp, text="Номер: ${state.currentParent?.id ?: ""}")
+                    Text(fontSize = 12.sp, text="Имя: ${state.currentParent?.name ?: ""}")
+                    Text(fontSize = 12.sp, text="Количество родителей: ${state.currentParent?.countParent ?: ""}")
+                    Text(fontSize = 12.sp, text="Количество детей: ${state.currentParent?.countChildren ?: ""}")
                 }
             }
             Spacer(modifier = Modifier.height(12.dp))
@@ -114,7 +116,9 @@ internal fun MainScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp)
-                            .clickable {  },
+                            .clickable {
+                                onAction.invoke(Action.OnClickGoToChildren(item))
+                            },
                         colors = CardDefaults.cardColors(
                             containerColor = Color.White,
                             contentColor = Color.Black

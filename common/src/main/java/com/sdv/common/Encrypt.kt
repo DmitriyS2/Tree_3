@@ -11,5 +11,5 @@ fun encrypt(input: String): String {
     while (hashText.length < 20) {
         hashText = "0$hashText"
     }
-    return hashText
+    return hashText.substring(0, 19)
 }
