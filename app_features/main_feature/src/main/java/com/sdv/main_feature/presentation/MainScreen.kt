@@ -31,9 +31,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sdv.main_feature.R
 import com.sdv.main_feature.presentation.MainContract.Action
 import com.sdv.main_feature.presentation.MainContract.State
 
@@ -52,7 +54,7 @@ internal fun MainScreen(
         modifier = Modifier.fillMaxSize(),
         floatingActionButton = {
             FloatingActionButton(
-                content = { Icon(Icons.Filled.Add, contentDescription = "Добавить") },
+                content = { Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.add)) },
                 onClick = { onAction.invoke(Action.OnClickAddChild) },
                 containerColor = Color.Yellow
             )
@@ -67,7 +69,7 @@ internal fun MainScreen(
                 .padding(vertical = padding.calculateTopPadding(), horizontal = 8.dp)
         ) {
             Text(
-                text = "Родитель:",
+                text = stringResource(R.string.parent),
                 modifier = Modifier.padding(top = 8.dp)
             )
             Card(
@@ -76,7 +78,7 @@ internal fun MainScreen(
                     .padding(top = 8.dp)
                     .clickable {
                         if (state.currentParent?.id == 1L) {
-                            showToast("Не получится. Это root-элемент", context)
+                            showToast(context.getString(R.string.root_element), context)
                             return@clickable
                         }
                         onAction.invoke(Action.OnClickGoToParent)
@@ -97,7 +99,7 @@ internal fun MainScreen(
                             .align(Alignment.End),
                         onClick = {
                             if (state.currentParent?.id == 1L) {
-                                showToast("Не получится. Это root-элемент", context)
+                                showToast(context.getString(R.string.root_element), context)
                                 return@IconButton
                             }
                             onAction.invoke(Action.OnClickDeleteParent(state.currentParent))
@@ -105,21 +107,21 @@ internal fun MainScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Удалить родителя",
+                            contentDescription = stringResource(R.string.delete_parent),
                             tint = Color.Red
                         )
                     }
-                    Text(fontSize = 12.sp, text = "Номер: ${state.currentParent?.id ?: ""}")
-                    Text(fontSize = 12.sp, text = "Имя: ${state.currentParent?.name ?: ""}")
-                    Text(fontSize = 12.sp, text = "Количество родителей: ${state.currentParent?.countParent ?: ""}")
-                    Text(fontSize = 12.sp, text = "Количество детей: ${state.currentParent?.countChildren ?: ""}")
+                    Text(fontSize = 12.sp, text = stringResource(R.string.number, state.currentParent?.id ?: 0))
+                    Text(fontSize = 12.sp, text = stringResource(R.string.name, state.currentParent?.name ?: ""))
+                    Text(fontSize = 12.sp, text = stringResource(R.string.count_parent, state.currentParent?.countParent ?: 0))
+                    Text(fontSize = 12.sp, text = stringResource(R.string.count_children, state.currentParent?.countChildren ?: 0))
                 }
             }
             Spacer(modifier = Modifier.height(12.dp))
             HorizontalDivider(thickness = 1.dp, color = Color.Black)
 
             Text(
-                text = "Дети:",
+                text = stringResource(R.string.children),
                 modifier = Modifier.padding(top = 16.dp)
             )
 
@@ -152,14 +154,14 @@ internal fun MainScreen(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Close,
-                                    contentDescription = "Удалить ребенка",
+                                    contentDescription = stringResource(R.string.delete_child),
                                     tint = Color.Red
                                 )
                             }
-                            Text(fontSize = 10.sp, text = "Номер: ${item.id}")
-                            Text(fontSize = 10.sp, text = "Имя: ${item.name}")
-                            Text(fontSize = 10.sp, text = "Количество родителей: ${item.countParent}")
-                            Text(fontSize = 10.sp, text = "Количество детей: ${item.countChildren}")
+                            Text(fontSize = 12.sp, text = stringResource(R.string.number, item.id))
+                            Text(fontSize = 12.sp, text = stringResource(R.string.name, item.name))
+                            Text(fontSize = 12.sp, text = stringResource(R.string.count_parent, item.countParent))
+                            Text(fontSize = 12.sp, text = stringResource(R.string.count_children, item.countChildren))
                         }
                     }
                     Spacer(modifier = Modifier.height(12.dp))
