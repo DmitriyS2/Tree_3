@@ -10,9 +10,9 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal interface DataStorageModule {
+internal abstract class DataStorageModule {
 
     @Singleton
     @Binds
-    fun bindDataStorage(impl: DataStorageImpl): DataStorage
+    abstract fun bindDataStorage(impl: DataStorageImpl): DataStorage
 }

@@ -15,7 +15,7 @@ internal class DataStorageImpl @Inject constructor(
 
     companion object {
         private const val CURRENT_PARENT_KEY = "current_parent_key"
-        private const val DEFAULT_CURRENT_PARENT = 0L
+        private const val DEFAULT_CURRENT_PARENT = 1L
         private val currentParentKey = longPreferencesKey(CURRENT_PARENT_KEY)
     }
 
