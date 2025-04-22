@@ -25,6 +25,6 @@ fun List<Node>.toListUI() = this.map { node ->
     node.toUI()
 }
 
-fun List<NodeUI>.toListModel() = this.map{ nodeUI ->
+fun List<NodeUI>.toListModel() = this.map { nodeUI ->
     nodeUI.toModel()
 }

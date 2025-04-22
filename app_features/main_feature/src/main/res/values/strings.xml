@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add">Добавить</string>
+    <string name="parent">Родитель:</string>
+    <string name="root_element">Не получится. Это root-элемент</string>
+    <string name="delete_parent">Удалить родителя</string>
+    <string name="children">Дети:</string>
+    <string name="delete_child">Удалить ребенка</string>
+    <string name="number">Номер: %1$d</string>
+    <string name="name">Имя: %1$s</string>
+    <string name="count_parent">Количество родителей: %1$d</string>
+    <string name="count_children">Количество детей: %1$d</string>
+</resources>

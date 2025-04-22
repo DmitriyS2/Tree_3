@@ -10,10 +10,7 @@ import javax.inject.Inject
 
 internal class MainRepositoryImpl @Inject constructor(
     private val databaseApi: DatabaseApi,
-): MainRepository {
-    override suspend fun getAll(): List<NodeUI> {
-        TODO("Not yet implemented")
-    }
+) : MainRepository {
 
     override suspend fun getAllChildren(idParent: Long): List<NodeUI> {
         return databaseApi.getAllChildren(idParent).toListUI()

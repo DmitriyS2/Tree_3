@@ -10,5 +10,5 @@ internal data class NodeEntity(
     val name: String = "",
     val idParent: Long,
     val parents: String = "0",
-    val children:String = "0",
+    val children: String = "0",
 )

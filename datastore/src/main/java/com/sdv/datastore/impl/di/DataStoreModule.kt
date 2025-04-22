@@ -33,7 +33,7 @@ internal class DataStoreModule {
         @ApplicationContext context: Context,
     ): DataStore<Preferences> = PreferenceDataStoreFactory.create(
         corruptionHandler = ReplaceFileCorruptionHandler(produceNewData = { emptyPreferences() }),
-        scope = CoroutineScope(Dispatchers.IO+ SupervisorJob()),
+        scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
         produceFile = { context.preferencesDataStoreFile(USER_PREFERENCE) }
     )
 }

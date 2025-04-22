@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 internal class GetNodeByIdUseCaseImpl @Inject constructor(
     private val mainRepository: MainRepository,
-):GetNodeByIdUseCase {
+) : GetNodeByIdUseCase {
 
     override suspend fun invoke(id: Long): NodeUI? {
         return mainRepository.getItemById(id)

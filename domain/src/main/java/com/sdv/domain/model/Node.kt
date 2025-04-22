@@ -5,5 +5,5 @@ data class Node(
     val name: String = "",
     val idParent: Long = 0L,
     val parents: List<Long> = emptyList(),
-    val children:List<Long> = emptyList(),
+    val children: List<Long> = emptyList(),
 )

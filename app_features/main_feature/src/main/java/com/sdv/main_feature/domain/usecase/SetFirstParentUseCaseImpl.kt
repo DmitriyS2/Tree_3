@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 internal class SetFirstParentUseCaseImpl @Inject constructor(
     private val mainRepository: MainRepository,
-): SetFirstParentUseCase {
+) : SetFirstParentUseCase {
 
     override suspend fun invoke() {
         val firstParent = NodeUI(

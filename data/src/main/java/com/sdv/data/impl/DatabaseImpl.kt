@@ -10,9 +10,7 @@ import javax.inject.Inject
 
 internal class DatabaseImpl @Inject constructor(
     private val nodeDao: NodeDao,
-): DatabaseApi {
-
-    override suspend fun getAll(): List<Node> = nodeDao.getAll().toModel()
+) : DatabaseApi {
 
     override suspend fun getAllChildren(idParent: Long): List<Node> = nodeDao.getAllChildren(idParent).toModel()
 

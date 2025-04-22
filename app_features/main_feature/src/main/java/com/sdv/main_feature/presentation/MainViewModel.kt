@@ -90,16 +90,16 @@ internal class MainViewModel @Inject constructor(
         }
     }
 
-    private fun deleteNode(nodeUI: NodeUI?, fromParent:Boolean) {
+    private fun deleteNode(nodeUI: NodeUI?, fromParent: Boolean) {
         nodeUI?.let {
-        viewModelScope.launch {
-            deleteNodeUseCase(nodeUI)
-            val newParentId = if (fromParent) nodeUI.idParent else state.value.currentParent?.id ?: 0
-            val currentParent = getNodeByIdUseCase(newParentId)
-            val currentChildren = getChildrenForParentByIdUseCase(newParentId)
-            setState { it.copy(currentParent = currentParent, currentChildren = currentChildren) }
-            dataStorage.setCurrentParent(newParentId)
+            viewModelScope.launch {
+                deleteNodeUseCase(nodeUI)
+                val newParentId = if (fromParent) nodeUI.idParent else state.value.currentParent?.id ?: 0
+                val currentParent = getNodeByIdUseCase(newParentId)
+                val currentChildren = getChildrenForParentByIdUseCase(newParentId)
+                setState { it.copy(currentParent = currentParent, currentChildren = currentChildren) }
+                dataStorage.setCurrentParent(newParentId)
+            }
         }
-    }
     }
 }

@@ -10,10 +10,6 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 internal interface NodeDao {
 
-    //дать все item'ы
-    @Query("SELECT * FROM NodeEntity")
-    suspend fun getAll(): List<NodeEntity>
-
     //дать все item'ы детей конкретного родителя
     @Query("SELECT * FROM NodeEntity WHERE idParent = :idParent")
     suspend fun getAllChildren(idParent: Long): List<NodeEntity>

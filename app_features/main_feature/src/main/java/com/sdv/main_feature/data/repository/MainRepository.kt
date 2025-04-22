@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 internal interface MainRepository {
 
-    suspend fun getAll(): List<NodeUI>
     suspend fun getAllChildren(idParent: Long): List<NodeUI>
     suspend fun getItemById(id: Long): NodeUI?
     suspend fun insert(nodeUI: NodeUI): Long
