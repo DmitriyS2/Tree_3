@@ -2,6 +2,8 @@ package com.sdv.main_feature.di
 
 import com.sdv.main_feature.domain.usecase.AddNodeUseCase
 import com.sdv.main_feature.domain.usecase.AddNodeUseCaseImpl
+import com.sdv.main_feature.domain.usecase.DeleteNodeUseCase
+import com.sdv.main_feature.domain.usecase.DeleteNodeUseCaseImpl
 import com.sdv.main_feature.domain.usecase.GetChildrenForParentByIdUseCase
 import com.sdv.main_feature.domain.usecase.GetChildrenForParentByIdUseCaseImpl
 import com.sdv.main_feature.domain.usecase.GetNodeByIdUseCase
@@ -33,4 +35,8 @@ internal interface UseCaseModule {
     @Binds
     @Singleton
     fun bindGetChildrenForParentByIdUseCase(impl: GetChildrenForParentByIdUseCaseImpl): GetChildrenForParentByIdUseCase
+
+    @Binds
+    @Singleton
+    fun bindDeleteNodeUseCase(impl: DeleteNodeUseCaseImpl): DeleteNodeUseCase
 }

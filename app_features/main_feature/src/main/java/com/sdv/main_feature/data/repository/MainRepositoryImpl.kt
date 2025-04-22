@@ -28,11 +28,11 @@ internal class MainRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteItemById(id: Long) {
-        TODO("Not yet implemented")
+        databaseApi.deleteItemById(id)
     }
 
     override suspend fun deleteItemByIdParent(idParent: Long) {
-        TODO("Not yet implemented")
+        databaseApi.deleteItemByIdParent(idParent)
     }
 
     override fun getMaxId(): Flow<Long> {

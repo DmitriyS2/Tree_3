@@ -5,8 +5,6 @@ import com.sdv.common.encrypt
 import com.sdv.main_feature.data.repository.MainRepository
 import com.sdv.main_feature.domain.model.NodeUI
 import kotlinx.coroutines.flow.first
-import java.math.BigInteger
-import java.security.MessageDigest
 import javax.inject.Inject
 
 internal class AddNodeUseCaseImpl @Inject constructor(
@@ -14,8 +12,8 @@ internal class AddNodeUseCaseImpl @Inject constructor(
 ) : AddNodeUseCase {
 
     override suspend fun invoke(nodeUI: NodeUI?) {
+        //вставка ребенка
         nodeUI?.let {
-            //вставка ребенка
             val tempParents: MutableList<Long> = mutableListOf()
             tempParents.addAll(nodeUI.parents)
             tempParents.add(nodeUI.id)
@@ -27,6 +25,7 @@ internal class AddNodeUseCaseImpl @Inject constructor(
             )
             val newNodeUIid = mainRepository.insert(newNodeUI)
             Log.d("MyLog", "newNodeUI=$newNodeUI ,newNodeUIid=$newNodeUIid")
+
             // доб нового ребенка в children у родителя
             val tempChildren: MutableList<Long> = mutableListOf()
             tempChildren.addAll(nodeUI.children)
