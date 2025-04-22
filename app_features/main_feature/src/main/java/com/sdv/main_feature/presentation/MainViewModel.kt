@@ -6,6 +6,7 @@ import com.sdv.base_feature.MviViewModel
 import com.sdv.datastore.DataStorage
 import com.sdv.main_feature.domain.model.NodeUI
 import com.sdv.main_feature.domain.usecase.AddNodeUseCase
+import com.sdv.main_feature.domain.usecase.DeleteNodeUseCase
 import com.sdv.main_feature.domain.usecase.GetChildrenForParentByIdUseCase
 import com.sdv.main_feature.domain.usecase.GetNodeByIdUseCase
 import com.sdv.main_feature.domain.usecase.SetFirstParentUseCase
@@ -23,6 +24,7 @@ internal class MainViewModel @Inject constructor(
     private val addNodeUseCase: AddNodeUseCase,
     private val getNodeByIdUseCase: GetNodeByIdUseCase,
     private val getChildrenForParentByIdUseCase: GetChildrenForParentByIdUseCase,
+    private val deleteNodeUseCase: DeleteNodeUseCase,
 ) : MviViewModel<State, Action>() {
 
     init {
@@ -36,8 +38,8 @@ internal class MainViewModel @Inject constructor(
             Action.OnClickAddChild -> addChild()
             Action.OnClickGoToParent -> goToParent()
             is Action.OnClickGoToChildren -> goToChildren(action.nodeUI)
-            is Action.OnClickDeleteChildren -> TODO()
-            is Action.OnClickDeleteParent -> TODO()
+            is Action.OnClickDeleteChildren -> deleteNode(action.nodeUI, false)
+            is Action.OnClickDeleteParent -> deleteNode(action.nodeUI, true)
         }
     }
 
@@ -86,5 +88,18 @@ internal class MainViewModel @Inject constructor(
             setState { it.copy(currentParent = currentParent, currentChildren = currentChildren) }
             dataStorage.setCurrentParent(newParentId)
         }
+    }
+
+    private fun deleteNode(nodeUI: NodeUI?, fromParent:Boolean) {
+        nodeUI?.let {
+        viewModelScope.launch {
+            deleteNodeUseCase(nodeUI)
+            val newParentId = if (fromParent) nodeUI.idParent else state.value.currentParent?.id ?: 0
+            val currentParent = getNodeByIdUseCase(newParentId)
+            val currentChildren = getChildrenForParentByIdUseCase(newParentId)
+            setState { it.copy(currentParent = currentParent, currentChildren = currentChildren) }
+            dataStorage.setCurrentParent(newParentId)
+        }
+    }
     }
 }

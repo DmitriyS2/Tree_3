@@ -9,8 +9,8 @@ internal object MainContract {
         data object OnClickAddChild: Action
         data object  OnClickGoToParent: Action
         data class  OnClickGoToChildren(val nodeUI: NodeUI): Action
-        data class OnClickDeleteParent(val nodeUI: NodeUI): Action
-        data class OnClickDeleteChildren(val nodeUI: NodeUI): Action
+        data class OnClickDeleteParent(val nodeUI: NodeUI?): Action
+        data class OnClickDeleteChildren(val nodeUI: NodeUI?): Action
     }
     data class State(
         val currentParent: NodeUI? = null,

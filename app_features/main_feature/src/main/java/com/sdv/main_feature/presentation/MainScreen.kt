@@ -1,6 +1,8 @@
 package com.sdv.main_feature.presentation
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
@@ -26,17 +27,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sdv.main_feature.presentation.MainContract.Action
 import com.sdv.main_feature.presentation.MainContract.State
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -46,6 +45,8 @@ internal fun MainScreen(
     onAction: (Action) -> Unit,
     padding: PaddingValues,
 ) {
+
+    val context = LocalContext.current
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -74,6 +75,10 @@ internal fun MainScreen(
                     .fillMaxWidth()
                     .padding(top = 8.dp)
                     .clickable {
+                        if (state.currentParent?.id == 1L) {
+                            showToast("Не получится. Это root-элемент", context)
+                            return@clickable
+                        }
                         onAction.invoke(Action.OnClickGoToParent)
                     },
                 colors = CardDefaults.cardColors(
@@ -81,25 +86,33 @@ internal fun MainScreen(
                     contentColor = Color.Black
                 )
             ) {
-                Column(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 8.dp)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 8.dp)
                 ) {
                     IconButton(
                         modifier = Modifier
                             .size(24.dp)
                             .align(Alignment.End),
-                        onClick = {}
+                        onClick = {
+                            if (state.currentParent?.id == 1L) {
+                                showToast("Не получится. Это root-элемент", context)
+                                return@IconButton
+                            }
+                            onAction.invoke(Action.OnClickDeleteParent(state.currentParent))
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Удалить родителя",
-                            tint = Color.Red)
+                            tint = Color.Red
+                        )
                     }
-                    Text(fontSize = 12.sp, text="Номер: ${state.currentParent?.id ?: ""}")
-                    Text(fontSize = 12.sp, text="Имя: ${state.currentParent?.name ?: ""}")
-                    Text(fontSize = 12.sp, text="Количество родителей: ${state.currentParent?.countParent ?: ""}")
-                    Text(fontSize = 12.sp, text="Количество детей: ${state.currentParent?.countChildren ?: ""}")
+                    Text(fontSize = 12.sp, text = "Номер: ${state.currentParent?.id ?: ""}")
+                    Text(fontSize = 12.sp, text = "Имя: ${state.currentParent?.name ?: ""}")
+                    Text(fontSize = 12.sp, text = "Количество родителей: ${state.currentParent?.countParent ?: ""}")
+                    Text(fontSize = 12.sp, text = "Количество детей: ${state.currentParent?.countChildren ?: ""}")
                 }
             }
             Spacer(modifier = Modifier.height(12.dp))
@@ -124,24 +137,29 @@ internal fun MainScreen(
                             contentColor = Color.Black
                         )
                     ) {
-                        Column(modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp, vertical = 8.dp)) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp, vertical = 8.dp)
+                        ) {
                             IconButton(
                                 modifier = Modifier
                                     .size(24.dp)
                                     .align(Alignment.End),
-                                onClick = {}
+                                onClick = {
+                                    onAction.invoke(Action.OnClickDeleteChildren(item))
+                                }
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Close,
                                     contentDescription = "Удалить ребенка",
-                                    tint = Color.Red)
+                                    tint = Color.Red
+                                )
                             }
-                            Text(fontSize = 10.sp, text="Номер: ${item.id}")
-                            Text(fontSize = 10.sp, text="Имя: ${item.name}")
-                            Text(fontSize = 10.sp, text="Количество родителей: ${item.countParent}")
-                            Text(fontSize = 10.sp, text="Количество детей: ${item.countChildren}")
+                            Text(fontSize = 10.sp, text = "Номер: ${item.id}")
+                            Text(fontSize = 10.sp, text = "Имя: ${item.name}")
+                            Text(fontSize = 10.sp, text = "Количество родителей: ${item.countParent}")
+                            Text(fontSize = 10.sp, text = "Количество детей: ${item.countChildren}")
                         }
                     }
                     Spacer(modifier = Modifier.height(12.dp))
@@ -149,6 +167,10 @@ internal fun MainScreen(
             }
         }
     }
+}
+
+fun showToast(text: String, context: Context) {
+    Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
 }
 
 @Preview(showBackground = true)
