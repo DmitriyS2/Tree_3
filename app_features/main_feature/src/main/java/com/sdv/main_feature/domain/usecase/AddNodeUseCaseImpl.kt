@@ -1,5 +1,7 @@
 package com.sdv.main_feature.domain.usecase
 
+import android.util.Log
+import com.sdv.common.encrypt
 import com.sdv.main_feature.data.repository.MainRepository
 import com.sdv.main_feature.domain.model.NodeUI
 import kotlinx.coroutines.flow.first
@@ -9,43 +11,37 @@ import javax.inject.Inject
 
 internal class AddNodeUseCaseImpl @Inject constructor(
     private val mainRepository: MainRepository
-) :AddNodeUseCase {
+) : AddNodeUseCase {
 
-    override suspend fun invoke(nodeUI: NodeUI) {
-        //вставка ребенка
-        val tempParents:MutableList<Long> = mutableListOf()
-        tempParents.addAll(nodeUI.children)
-        tempParents.add(nodeUI.id)
-        val newNodeUI = NodeUI(
-            name = encrypt(mainRepository.getMaxId().first().toString()),
-            idParent = nodeUI.id,
-            parents = tempParents.toList(),
-            children = emptyList()
-        )
-        val newNodeUIid = mainRepository.insert(newNodeUI)
-
-        // доб нового ребенка в children у родителя
-        val tempChildren:MutableList<Long> = mutableListOf()
-        tempChildren.addAll(nodeUI.children)
-        tempChildren.add(newNodeUIid)
-        val oldNodeUI = NodeUI(
-            id = nodeUI.id,
-            name = nodeUI.name,
-            idParent = nodeUI.idParent,
-            parents = nodeUI.parents,
-            children = tempChildren.toList()
-        )
-        mainRepository.insert(oldNodeUI)
-    }
-
-    private fun encrypt(input: String): String {
-        val md = MessageDigest.getInstance("SHA-1")
-        val messageDigest = md.digest(input.toByteArray())
-        val no = BigInteger(1, messageDigest)
-        var hashText = no.toString(16)
-        while (hashText.length < 20) {
-            hashText = "0$hashText"
+    override suspend fun invoke(nodeUI: NodeUI?) {
+        nodeUI?.let {
+            //вставка ребенка
+            val tempParents: MutableList<Long> = mutableListOf()
+            tempParents.addAll(nodeUI.parents)
+            tempParents.add(nodeUI.id)
+            val newNodeUI = NodeUI(
+                name = encrypt(mainRepository.getMaxId().first().toString()),
+                idParent = nodeUI.id,
+                parents = tempParents.toList(),
+                children = emptyList()
+            )
+            val newNodeUIid = mainRepository.insert(newNodeUI)
+            Log.d("MyLog", "newNodeUI=$newNodeUI ,newNodeUIid=$newNodeUIid")
+            // доб нового ребенка в children у родителя
+            val tempChildren: MutableList<Long> = mutableListOf()
+            tempChildren.addAll(nodeUI.children)
+            tempChildren.add(newNodeUIid)
+            Log.d("MyLog", "nodeUI.children=${nodeUI.children} tempChildren=$tempChildren")
+            val oldNodeUI = NodeUI(
+                id = nodeUI.id,
+                name = nodeUI.name,
+                idParent = nodeUI.idParent,
+                parents = nodeUI.parents,
+                children = tempChildren.toList()
+            )
+            Log.d("MyLog", "oldNodeUI=$oldNodeUI")
+            val t = mainRepository.insert(oldNodeUI)
+            Log.d("MyLog", "t=$t")
         }
-        return hashText
     }
 }

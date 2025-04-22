@@ -6,6 +6,8 @@ import com.sdv.main_feature.domain.usecase.GetChildrenForParentByIdUseCase
 import com.sdv.main_feature.domain.usecase.GetChildrenForParentByIdUseCaseImpl
 import com.sdv.main_feature.domain.usecase.GetNodeByIdUseCase
 import com.sdv.main_feature.domain.usecase.GetNodeByIdUseCaseImpl
+import com.sdv.main_feature.domain.usecase.SetFirstParentUseCase
+import com.sdv.main_feature.domain.usecase.SetFirstParentUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,6 +17,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal interface UseCaseModule {
+
+    @Binds
+    @Singleton
+    fun bindSetFirstParentUseCase(impl: SetFirstParentUseCaseImpl): SetFirstParentUseCase
 
     @Binds
     @Singleton

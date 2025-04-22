@@ -17,6 +17,8 @@ fun NodeUI.toModel() = Node(
     id = this.id,
     name = this.name,
     idParent = this.idParent,
+    parents = this.parents,
+    children = this.children,
 )
 
 fun List<Node>.toListUI() = this.map { node ->

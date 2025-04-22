@@ -8,6 +8,7 @@ import com.sdv.main_feature.domain.model.NodeUI
 import com.sdv.main_feature.domain.usecase.AddNodeUseCase
 import com.sdv.main_feature.domain.usecase.GetChildrenForParentByIdUseCase
 import com.sdv.main_feature.domain.usecase.GetNodeByIdUseCase
+import com.sdv.main_feature.domain.usecase.SetFirstParentUseCase
 import com.sdv.main_feature.presentation.MainContract.Action
 import com.sdv.main_feature.presentation.MainContract.State
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class MainViewModel @Inject constructor(
     private val dataStorage: DataStorage,
+    private val setFirstParentUseCase: SetFirstParentUseCase,
     private val addNodeUseCase: AddNodeUseCase,
     private val getNodeByIdUseCase: GetNodeByIdUseCase,
     private val getChildrenForParentByIdUseCase: GetChildrenForParentByIdUseCase,
@@ -31,7 +33,7 @@ internal class MainViewModel @Inject constructor(
 
     override fun handleEvent(action: Action) {
         when (action) {
-            Action.OnClickAddChild -> {}
+            Action.OnClickAddChild -> {addChild()}
             is Action.OnClickGoToParent -> {}
             is Action.OnClickGoToChildren -> TODO()
             is Action.OnClickDeleteChildren -> TODO()
@@ -47,12 +49,22 @@ internal class MainViewModel @Inject constructor(
             Log.d("MyLog", "currentParent1=$currentParent")
             if(currentParent==null) {
                 Log.d("MyLog", "currentParent=null if")
-                addNodeUseCase(NodeUI())
+             //   addNodeUseCase(NodeUI())
+                setFirstParentUseCase()
                 currentParent = getNodeByIdUseCase(currentParentId)
                 Log.d("MyLog", "currentParent2=$currentParent")
             }
             val currentChildren = getChildrenForParentByIdUseCase(currentParentId)
             Log.d("MyLog", "currentChildren=$currentChildren")
+            setState { it.copy(currentParent = currentParent, currentChildren = currentChildren) }
+        }
+    }
+
+    private fun addChild() {
+        viewModelScope.launch {
+            addNodeUseCase(state.value.currentParent)
+            val currentChildren = getChildrenForParentByIdUseCase(state.value.currentParent?.id ?: 0)
+            val currentParent = getNodeByIdUseCase(state.value.currentParent?.id ?: 0)
             setState { it.copy(currentParent = currentParent, currentChildren = currentChildren) }
         }
     }
