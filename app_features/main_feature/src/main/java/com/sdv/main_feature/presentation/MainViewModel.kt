@@ -3,7 +3,6 @@ package com.sdv.main_feature.presentation
 import androidx.lifecycle.viewModelScope
 import com.sdv.base_feature.MviViewModel
 import com.sdv.datastore.DataStorage
-import com.sdv.main_feature.data.repository.MainRepository
 import com.sdv.main_feature.domain.model.NodeUI
 import com.sdv.main_feature.domain.usecase.AddNodeUseCase
 import com.sdv.main_feature.domain.usecase.DeleteNodeUseCase
@@ -81,13 +80,13 @@ internal class MainViewModel @Inject constructor(
 
     private fun addChild() {
         viewModelScope.launch {
-            addNodeUseCase(state.value.currentParent)
+            addNodeUseCase(currentState.currentParent)
         }
     }
 
     private fun goToParent() {
         viewModelScope.launch {
-            val newParentId = state.value.currentParent?.idParent ?: 0
+            val newParentId = currentState.currentParent?.idParent ?: 0
             goToParentUseCase(newParentId)
         }
     }
@@ -102,7 +101,7 @@ internal class MainViewModel @Inject constructor(
     private fun deleteNode(nodeUI: NodeUI?, fromParent: Boolean) {
         nodeUI?.let {
             viewModelScope.launch {
-                val newParentId = if (fromParent) nodeUI.idParent else state.value.currentParent?.id ?: 0
+                val newParentId = if (fromParent) nodeUI.idParent else currentState.currentParent?.id ?: 0
                 deleteNodeUseCase(nodeUI, newParentId)
             }
         }
