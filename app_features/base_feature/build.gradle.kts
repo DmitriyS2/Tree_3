@@ -30,6 +30,8 @@ android {
 }
 
 dependencies {
+    // Kotlin coroutines with lifecycle
+    implementation(libs.bundles.lifecycle)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
