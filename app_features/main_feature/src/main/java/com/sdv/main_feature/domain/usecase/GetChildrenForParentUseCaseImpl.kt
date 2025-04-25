@@ -6,9 +6,7 @@ import javax.inject.Inject
 
 internal class GetChildrenForParentByIdUseCaseImpl @Inject constructor(
     private val mainRepository: MainRepository,
-):GetChildrenForParentByIdUseCase {
+) : GetChildrenForParentByIdUseCase {
 
-    override suspend fun invoke(idParent: Long): List<NodeUI> {
-        return mainRepository.getAllChildren(idParent)
-    }
+    override suspend fun invoke(idParent: Long): List<NodeUI> = mainRepository.getAllChildrenByParent(idParent)
 }

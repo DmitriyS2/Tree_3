@@ -111,10 +111,10 @@ internal fun MainScreen(
                             tint = Color.Red
                         )
                     }
-                    Text(fontSize = 12.sp, text = stringResource(R.string.number, state.currentParent?.id ?: 0))
-                    Text(fontSize = 12.sp, text = stringResource(R.string.name, state.currentParent?.name ?: ""))
-                    Text(fontSize = 12.sp, text = stringResource(R.string.count_parent, state.currentParent?.countParent ?: 0))
-                    Text(fontSize = 12.sp, text = stringResource(R.string.count_children, state.currentParent?.countChildren ?: 0))
+                    Text(fontSize = 14.sp, text = stringResource(R.string.number, state.currentParent?.id ?: 0))
+                    Text(fontSize = 14.sp, text = stringResource(R.string.name, state.currentParent?.name ?: ""))
+                    Text(fontSize = 14.sp, text = stringResource(R.string.count_parent, state.currentParent?.countParent ?: 0))
+                    Text(fontSize = 14.sp, text = stringResource(R.string.count_children, state.currentParent?.countChildren ?: 0))
                 }
             }
             Spacer(modifier = Modifier.height(12.dp))
@@ -125,7 +125,7 @@ internal fun MainScreen(
                 modifier = Modifier.padding(top = 16.dp)
             )
 
-            LazyColumn {
+            LazyColumn(modifier = Modifier.padding(bottom = 12.dp)) {
                 itemsIndexed(state.currentChildren) { _, item ->
                     Card(
                         modifier = Modifier
@@ -164,7 +164,6 @@ internal fun MainScreen(
                             Text(fontSize = 12.sp, text = stringResource(R.string.count_children, item.countChildren))
                         }
                     }
-                    Spacer(modifier = Modifier.height(12.dp))
                 }
             }
         }

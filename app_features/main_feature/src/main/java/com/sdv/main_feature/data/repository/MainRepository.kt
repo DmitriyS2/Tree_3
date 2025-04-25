@@ -5,10 +5,10 @@ import kotlinx.coroutines.flow.Flow
 
 internal interface MainRepository {
 
-    suspend fun getAllChildren(idParent: Long): List<NodeUI>
-    suspend fun getItemById(id: Long): NodeUI?
+    suspend fun getAllNodes(): Flow<List<NodeUI>>
+    suspend fun getAllChildrenByParent(idParent: Long): List<NodeUI>
+    suspend fun getNodeById(id: Long): NodeUI?
     suspend fun insert(nodeUI: NodeUI): Long
-    suspend fun deleteItemById(id: Long)
-    suspend fun deleteItemByIdParent(idParent: Long)
-    fun getMaxId(): Flow<Long>
+    suspend fun deleteNodeById(id: Long)
+    suspend fun deleteNodeByIdParent(idParent: Long)
 }

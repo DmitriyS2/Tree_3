@@ -4,5 +4,5 @@ import com.sdv.main_feature.domain.model.NodeUI
 
 internal interface DeleteNodeUseCase {
 
-    suspend operator fun invoke(nodeUI: NodeUI)
+    suspend operator fun invoke(nodeUI: NodeUI, newParentId:Long)
 }

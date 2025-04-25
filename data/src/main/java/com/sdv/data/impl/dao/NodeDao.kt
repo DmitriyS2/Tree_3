@@ -10,27 +10,27 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 internal interface NodeDao {
 
-    //дать все item'ы детей конкретного родителя
+    //дать все nodes
+    @Query("SELECT * FROM NodeEntity")
+    fun getAllNodes(): Flow<List<NodeEntity>>
+
+    //дать все nodes детей конкретного родителя
     @Query("SELECT * FROM NodeEntity WHERE idParent = :idParent")
-    suspend fun getAllChildren(idParent: Long): List<NodeEntity>
+    suspend fun getAllChildrenByParent(idParent: Long): List<NodeEntity>
 
-    //дать item по Id
+    //дать node по Id
     @Query("SELECT * FROM NodeEntity WHERE id = :id")
-    suspend fun getItemById(id: Long): NodeEntity?
+    suspend fun getNodeById(id: Long): NodeEntity?
 
-    //добавить новый item
+    //добавить новый node
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(nodeItemEntity: NodeEntity): Long
 
-    //удалить item по id
+    //удалить node по id
     @Query("DELETE FROM NodeEntity WHERE id = :id")
-    suspend fun deleteItemById(id: Long)
+    suspend fun deleteNodeById(id: Long)
 
-    //удалить item по idParent
+    //удалить node по idParent
     @Query("DELETE FROM NodeEntity WHERE idParent = :idParent")
-    suspend fun deleteItemByIdParent(idParent: Long)
-
-    //дать maxId в БД
-    @Query("SELECT MAX(id) FROM NodeEntity")
-    fun getMaxId(): Flow<Long>
+    suspend fun deleteNodeByIdParent(idParent: Long)
 }
