@@ -10,4 +10,6 @@
     <string name="name">Имя: %1$s</string>
     <string name="count_parent">Количество родителей: %1$d</string>
     <string name="count_children">Количество детей: %1$d</string>
+    <string name="logs_by_messenger">Поделиться логами через мессенджер</string>
+    <string name="logs_by_email">Поделиться логами через почту</string>
 </resources>

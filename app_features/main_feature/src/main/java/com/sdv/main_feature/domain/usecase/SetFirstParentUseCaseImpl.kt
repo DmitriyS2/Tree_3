@@ -1,6 +1,8 @@
 package com.sdv.main_feature.domain.usecase
 
 import com.sdv.common.encrypt
+import com.sdv.common.log.util.TAG
+import com.sdv.common.log.util.logDebug
 import com.sdv.datastore.DataStorage
 import com.sdv.main_feature.data.repository.MainRepository
 import com.sdv.main_feature.domain.model.NodeUI
@@ -21,5 +23,6 @@ internal class SetFirstParentUseCaseImpl @Inject constructor(
         )
         mainRepository.insert(firstParent)
         dataStorage.updateCountId()
+        "added first parent".logDebug(TAG)
     }
 }

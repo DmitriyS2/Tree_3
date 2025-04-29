@@ -9,7 +9,5 @@ internal class GetAllNodesUseCaseImpl @Inject constructor(
     private val mainRepository: MainRepository,
 ) : GetAllNodesUseCase {
 
-    override suspend fun invoke(): Flow<List<NodeUI>> {
-        return mainRepository.getAllNodes()
-    }
+    override suspend fun invoke(): Flow<List<NodeUI>> = mainRepository.getAllNodes()
 }
