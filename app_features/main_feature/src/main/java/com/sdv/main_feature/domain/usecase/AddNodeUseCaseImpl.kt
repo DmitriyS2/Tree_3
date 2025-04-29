@@ -1,6 +1,8 @@
 package com.sdv.main_feature.domain.usecase
 
 import com.sdv.common.encrypt
+import com.sdv.common.log.util.TAG
+import com.sdv.common.log.util.logDebug
 import com.sdv.datastore.DataStorage
 import com.sdv.main_feature.data.repository.MainRepository
 import com.sdv.main_feature.domain.model.NodeUI
@@ -18,27 +20,28 @@ internal class AddNodeUseCaseImpl @Inject constructor(
             val tempParents: MutableList<Long> = mutableListOf()
             tempParents.addAll(nodeUI.parents)
             tempParents.add(nodeUI.id)
-            val newNodeUI = NodeUI(
+            val newChild = NodeUI(
                 name = encrypt(dataStorage.countId.first().toString()),
                 idParent = nodeUI.id,
                 parents = tempParents.toList(),
                 children = emptyList()
             )
-            val newNodeUIid = mainRepository.insert(newNodeUI)
+            val newNodeUIid = mainRepository.insert(newChild)
+            "added new child id=$newNodeUIid, name=${newChild.name}".logDebug(TAG)
             dataStorage.updateCountId()
 
             // доб нового ребенка в children у родителя
             val tempChildren: MutableList<Long> = mutableListOf()
             tempChildren.addAll(nodeUI.children)
             tempChildren.add(newNodeUIid)
-            val oldNodeUI = NodeUI(
+            val parentWithNewChild = NodeUI(
                 id = nodeUI.id,
                 name = nodeUI.name,
                 idParent = nodeUI.idParent,
                 parents = nodeUI.parents,
                 children = tempChildren.toList()
             )
-            mainRepository.insert(oldNodeUI)
+            mainRepository.insert(parentWithNewChild)
         }
     }
 }

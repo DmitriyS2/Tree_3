@@ -17,6 +17,8 @@ roomKtx = "2.6.1"
 kspVersion = "1.9.0-1.0.13"
 navigationCompose = "2.8.4"
 hiltVmVersion = "1.2.0"
+timberVersion = "4.7.1"
+jodaTimeVersion = "2.14.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,6 +37,12 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+#logging
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timberVersion"}
+
+#Joda Time
+joda-time = { module = "joda-time:joda-time", version.ref = "jodaTimeVersion"}
 
 #DataStore
 datastore-android = {module = "androidx.datastore:datastore", version.ref = "datastoreVersion"}

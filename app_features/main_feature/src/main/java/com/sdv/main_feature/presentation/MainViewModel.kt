@@ -3,12 +3,12 @@ package com.sdv.main_feature.presentation
 import androidx.lifecycle.viewModelScope
 import com.sdv.base_feature.MviViewModel
 import com.sdv.datastore.DataStorage
-import com.sdv.main_feature.data.repository.MainRepository
 import com.sdv.main_feature.domain.model.NodeUI
 import com.sdv.main_feature.domain.usecase.AddNodeUseCase
 import com.sdv.main_feature.domain.usecase.DeleteNodeUseCase
 import com.sdv.main_feature.domain.usecase.GetAllNodesUseCase
 import com.sdv.main_feature.domain.usecase.GetChildrenForParentByIdUseCase
+import com.sdv.main_feature.domain.usecase.GetFileLogsUseCase
 import com.sdv.main_feature.domain.usecase.GetNodeByIdUseCase
 import com.sdv.main_feature.domain.usecase.GoToChildrenUseCase
 import com.sdv.main_feature.domain.usecase.GoToParentUseCase
@@ -31,6 +31,7 @@ internal class MainViewModel @Inject constructor(
     private val goToParentUseCase: GoToParentUseCase,
     private val goToChildrenUseCase: GoToChildrenUseCase,
     private val getAllNodesUseCase: GetAllNodesUseCase,
+    private val getFileLogsUseCase: GetFileLogsUseCase,
 ) : MviViewModel<State, Action>() {
 
     init {
@@ -47,6 +48,9 @@ internal class MainViewModel @Inject constructor(
             is Action.OnClickGoToChildren -> goToChildren(action.nodeUI)
             is Action.OnClickDeleteChildren -> deleteNode(action.nodeUI, false)
             is Action.OnClickDeleteParent -> deleteNode(action.nodeUI, true)
+            Action.MakeLogFileNull -> setState { it.copy(logFile = null) }
+            Action.OnClickShareByEmail -> sendLogs(isMessenger = false)
+            Action.OnClickShareByMessenger -> sendLogs(isMessenger = true)
         }
     }
 
@@ -65,9 +69,16 @@ internal class MainViewModel @Inject constructor(
                 var currentParent: NodeUI? = null
                 listAll.forEach { nodeUI ->
                     if (nodeUI.id == dataStorage.currentParent.first()) currentParent = nodeUI
-                    if (nodeUI.idParent == dataStorage.currentParent.first()) listChildren.add(nodeUI)
+                    if (nodeUI.idParent == dataStorage.currentParent.first()) listChildren.add(
+                        nodeUI
+                    )
                 }
-                setState { it.copy(currentParent = currentParent, currentChildren = listChildren.toList()) }
+                setState {
+                    it.copy(
+                        currentParent = currentParent,
+                        currentChildren = listChildren.toList()
+                    )
+                }
             }
         }
         viewModelScope.launch {
@@ -81,13 +92,13 @@ internal class MainViewModel @Inject constructor(
 
     private fun addChild() {
         viewModelScope.launch {
-            addNodeUseCase(state.value.currentParent)
+            addNodeUseCase(currentState.currentParent)
         }
     }
 
     private fun goToParent() {
         viewModelScope.launch {
-            val newParentId = state.value.currentParent?.idParent ?: 0
+            val newParentId = currentState.currentParent?.idParent ?: 0
             goToParentUseCase(newParentId)
         }
     }
@@ -102,9 +113,17 @@ internal class MainViewModel @Inject constructor(
     private fun deleteNode(nodeUI: NodeUI?, fromParent: Boolean) {
         nodeUI?.let {
             viewModelScope.launch {
-                val newParentId = if (fromParent) nodeUI.idParent else state.value.currentParent?.id ?: 0
+                val newParentId =
+                    if (fromParent) nodeUI.idParent else currentState.currentParent?.id ?: 0
                 deleteNodeUseCase(nodeUI, newParentId)
             }
+        }
+    }
+
+    private fun sendLogs(isMessenger: Boolean) {
+        viewModelScope.launch {
+            val logFile = getFileLogsUseCase()
+            setState { it.copy(logFile = logFile, sendByMessenger = isMessenger) }
         }
     }
 }
