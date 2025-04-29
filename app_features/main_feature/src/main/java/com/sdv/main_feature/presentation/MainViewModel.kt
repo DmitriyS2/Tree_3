@@ -8,6 +8,7 @@ import com.sdv.main_feature.domain.usecase.AddNodeUseCase
 import com.sdv.main_feature.domain.usecase.DeleteNodeUseCase
 import com.sdv.main_feature.domain.usecase.GetAllNodesUseCase
 import com.sdv.main_feature.domain.usecase.GetChildrenForParentByIdUseCase
+import com.sdv.main_feature.domain.usecase.GetFileLogsUseCase
 import com.sdv.main_feature.domain.usecase.GetNodeByIdUseCase
 import com.sdv.main_feature.domain.usecase.GoToChildrenUseCase
 import com.sdv.main_feature.domain.usecase.GoToParentUseCase
@@ -30,6 +31,7 @@ internal class MainViewModel @Inject constructor(
     private val goToParentUseCase: GoToParentUseCase,
     private val goToChildrenUseCase: GoToChildrenUseCase,
     private val getAllNodesUseCase: GetAllNodesUseCase,
+    private val getFileLogsUseCase: GetFileLogsUseCase,
 ) : MviViewModel<State, Action>() {
 
     init {
@@ -46,6 +48,9 @@ internal class MainViewModel @Inject constructor(
             is Action.OnClickGoToChildren -> goToChildren(action.nodeUI)
             is Action.OnClickDeleteChildren -> deleteNode(action.nodeUI, false)
             is Action.OnClickDeleteParent -> deleteNode(action.nodeUI, true)
+            Action.MakeLogFileNull -> setState { it.copy(logFile = null) }
+            Action.OnClickShareByEmail -> sendLogs(isMessenger = false)
+            Action.OnClickShareByMessenger -> sendLogs(isMessenger = true)
         }
     }
 
@@ -112,6 +117,13 @@ internal class MainViewModel @Inject constructor(
                     if (fromParent) nodeUI.idParent else currentState.currentParent?.id ?: 0
                 deleteNodeUseCase(nodeUI, newParentId)
             }
+        }
+    }
+
+    private fun sendLogs(isMessenger: Boolean) {
+        viewModelScope.launch {
+            val logFile = getFileLogsUseCase()
+            setState { it.copy(logFile = logFile, sendByMessenger = isMessenger) }
         }
     }
 }

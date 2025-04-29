@@ -7,8 +7,10 @@ object LoggerWrapper {
     private val loggers = ArrayList<Logger>()
 
     @JvmStatic
-    fun registerLogger(logger: Logger) {
-        loggers.add(logger)
+    fun registerLogger(logger: Logger?) {
+        logger?.let {
+            loggers.add(logger)
+        }
     }
 
     @JvmOverloads

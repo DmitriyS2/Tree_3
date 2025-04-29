@@ -1,6 +1,8 @@
 package com.sdv.common.log.file
 
-import android.util.Log
+import android.os.Environment
+import com.sdv.common.log.util.TAG
+import com.sdv.common.log.util.ZipHelper
 import com.sdv.common.log.util.formatFromNameString
 import com.sdv.common.log.util.isTrue
 import com.sdv.common.log.util.logDebug
@@ -15,21 +17,17 @@ import org.joda.time.Period
 import org.joda.time.PeriodType
 import org.joda.time.format.DateTimeFormat
 import timber.log.Timber
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 
 class FileLogs @Inject constructor(
-private val fileLogsRepository: FileLogsRepository,
+    private val fileLogsRepository: FileLogsRepository,
 ) : Timber.Tree() {
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO + Job())
-    private val DATE_DAY_WITH_HOUR_PATTERN = "yyyy-MM-dd-HH"
-    private val DATE_SECOND_PATTERN = "yyyy-MM-dd HH:mm:ss"
-    private val nameFileFormatterForDate = SimpleDateFormat(DATE_DAY_WITH_HOUR_PATTERN, Locale.US)
-    private val logFormatter = SimpleDateFormat(DATE_SECOND_PATTERN, Locale.US)
-    private val nameFileFormatterJoda = DateTimeFormat.forPattern(DATE_DAY_WITH_HOUR_PATTERN)
 
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
         val date = Date().getRecordingLogDate
@@ -54,23 +52,54 @@ private val fileLogsRepository: FileLogsRepository,
     fun deleteOldLogs() {
         val filesName = fileLogsRepository.getAllFileName().orEmpty()
         val currentDate = LocalDateTime()
-        Log.d("MyLog", "currentDate=$currentDate, startDate=${LocalDateTime().minus(
-            Period.days(LOG_STORAGE_DAYS))}")
         filesName.filter { fileName ->
             fileName.toLocalDateTime().let { localDateTime ->
                 val period = Period(localDateTime, currentDate, PeriodType.dayTime())
                 val delete = period.days >= LOG_STORAGE_DAYS
-                "deleteLogFile fileDate: $localDateTime period:  ${period.days}d ${period.hours}h delete: $delete".logDebug(TAG)
-                Log.d("MyLog", "deleteLogFile fileDate: $localDateTime period: ${period.days}d ${period.hours}h delete: $delete")
+                "deleteLogFile fileDate: $localDateTime period:  ${period.days}d ${period.hours}h delete: $delete".logDebug(
+                    TAG
+                )
                 delete
             }.isTrue()
         }.forEach { fileNameForDelete ->
             val delete = fileLogsRepository.deleteLogsByDate(fileNameForDelete)
             "deleteLogFile: $fileNameForDelete delete: $delete".logDebug(TAG)
-            Log.d("MyLog", "deleteLogFile: $fileNameForDelete delete: $delete")
         }
     }
 
+    fun sendLogs(): File {
+        val path = "${Environment.getDataDirectory().absolutePath}/data/$FOLDER_NAME/files"
+        val dir = File(path)
+        val files = getLogsInPeriod()
+        val pathName: String
+        val outFile: File
+
+        if (files.isNotEmpty()) {
+            pathName = "upload_logs.zip"
+            outFile = File(dir, pathName)
+            files.toTypedArray()
+            val filesForZipList: MutableList<File> = mutableListOf()
+            files.forEachIndexed { _, value ->
+                "${value.name} added to zip".logDebug(TAG)
+                filesForZipList.add(value)
+            }
+            ZipHelper.zipFiles(outFile, *filesForZipList.toTypedArray())
+        } else {
+            pathName = "upload_logs.txt"
+            outFile = File(dir, pathName)
+            outFile.writeText("лог файлов не найдено")
+            "no logs found".logDebug(TAG)
+        }
+        "file logs $pathName (length=${outFile.length()}) ready for sending".logDebug(TAG)
+        return outFile
+    }
+
+    private fun getLogsInPeriod(): List<File> {
+        val fileNames = fileLogsRepository.getAllFileName()
+        return fileNames?.map {
+            fileLogsRepository.getLogsByDate(it)
+        }.orEmpty()
+    }
 
     private companion object {
         private const val FOLDER_NAME = "com.sdv.tree3"
@@ -80,13 +109,17 @@ private val fileLogsRepository: FileLogsRepository,
         private const val MESSAGE = "message:"
         private const val THROWABLE = "throwable:"
         private const val LOG_STORAGE_DAYS = 30
+        private const val DATE_DAY_WITH_HOUR_PATTERN = "yyyy-MM-dd-HH"
+        private const val DATE_SECOND_PATTERN = "yyyy-MM-dd HH:mm:ss"
+        private val logFormatter = SimpleDateFormat(DATE_SECOND_PATTERN, Locale.US)
+        private val nameFileFormatter = DateTimeFormat.forPattern(DATE_DAY_WITH_HOUR_PATTERN)
     }
 
     private val Date.getRecordingLogDate: String
         get() = logFormatter.format(this)
 
     private val LocalDateTime.toFileName: String
-        get() = this.toString(nameFileFormatterJoda)
+        get() = this.toString(nameFileFormatter)
 
     private fun String.toLocalDateTime(): LocalDateTime {
         val subString = substringBetween("_", ".").orEmpty()

@@ -1,6 +1,5 @@
 package com.sdv.common.log.util
 
-import com.sdv.common.log.LoggerWrapper
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
@@ -41,13 +40,13 @@ object ZipHelper {
                 }
             }
         } catch (e: IOException) {
-            LoggerWrapper.error(TAG, e.message, e)
+            "Error".logError(TAG, e)
         } finally {
             if (fi != null) {
                 try {
                     fi!!.close()
                 } catch (e: IOException) {
-                    LoggerWrapper.error(TAG, e.message, e)
+                    "Error".logError(TAG, e)
                 }
             }
         }

@@ -1,8 +1,9 @@
 package com.sdv.common.log.instance
 
 import timber.log.Timber
+import javax.inject.Inject
 
-class LoggerTimber : Logger {
+internal class LoggerTimber @Inject constructor() : Logger {
 
     override fun error(tag: String?, message: String?, throwable: Throwable?) {
         Timber.e("${throwable ?: ""} ${tag ?: ""} ${message ?: ""}")

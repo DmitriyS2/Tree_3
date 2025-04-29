@@ -15,7 +15,7 @@ internal class DeleteNodeUseCaseImpl @Inject constructor(
     override suspend fun invoke(nodeUI: NodeUI, newParentId: Long) {
         mainRepository.deleteNodeById(nodeUI.id)
         mainRepository.deleteNodeByIdParent(nodeUI.id)
-        "deleted $nodeUI".logDebug(TAG)
+        "deleted node id=${nodeUI.id}, name=${nodeUI.name}".logDebug(TAG)
         // удалить данный node в children у его родителя
         val hisParent = mainRepository.getNodeById(nodeUI.idParent)
         hisParent?.let {
