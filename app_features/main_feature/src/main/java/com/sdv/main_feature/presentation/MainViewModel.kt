@@ -64,9 +64,16 @@ internal class MainViewModel @Inject constructor(
                 var currentParent: NodeUI? = null
                 listAll.forEach { nodeUI ->
                     if (nodeUI.id == dataStorage.currentParent.first()) currentParent = nodeUI
-                    if (nodeUI.idParent == dataStorage.currentParent.first()) listChildren.add(nodeUI)
+                    if (nodeUI.idParent == dataStorage.currentParent.first()) listChildren.add(
+                        nodeUI
+                    )
                 }
-                setState { it.copy(currentParent = currentParent, currentChildren = listChildren.toList()) }
+                setState {
+                    it.copy(
+                        currentParent = currentParent,
+                        currentChildren = listChildren.toList()
+                    )
+                }
             }
         }
         viewModelScope.launch {
@@ -101,7 +108,8 @@ internal class MainViewModel @Inject constructor(
     private fun deleteNode(nodeUI: NodeUI?, fromParent: Boolean) {
         nodeUI?.let {
             viewModelScope.launch {
-                val newParentId = if (fromParent) nodeUI.idParent else currentState.currentParent?.id ?: 0
+                val newParentId =
+                    if (fromParent) nodeUI.idParent else currentState.currentParent?.id ?: 0
                 deleteNodeUseCase(nodeUI, newParentId)
             }
         }

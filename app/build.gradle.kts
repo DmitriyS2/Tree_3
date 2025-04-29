@@ -52,6 +52,9 @@ dependencies {
     implementation(project(":common"))
     implementation(project(":app_features:main_feature"))
 
+    //Logging
+    implementation(libs.timber)
+
     // Kotlin coroutines with lifecycle
     implementation(libs.bundles.lifecycle)
 

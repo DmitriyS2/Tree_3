@@ -1,5 +1,7 @@
 package com.sdv.main_feature.domain.usecase
 
+import com.sdv.common.log.util.TAG
+import com.sdv.common.log.util.logDebug
 import com.sdv.datastore.DataStorage
 import com.sdv.main_feature.data.repository.MainRepository
 import com.sdv.main_feature.domain.model.NodeUI
@@ -13,7 +15,7 @@ internal class DeleteNodeUseCaseImpl @Inject constructor(
     override suspend fun invoke(nodeUI: NodeUI, newParentId: Long) {
         mainRepository.deleteNodeById(nodeUI.id)
         mainRepository.deleteNodeByIdParent(nodeUI.id)
-
+        "deleted $nodeUI".logDebug(TAG)
         // удалить данный node в children у его родителя
         val hisParent = mainRepository.getNodeById(nodeUI.idParent)
         hisParent?.let {
