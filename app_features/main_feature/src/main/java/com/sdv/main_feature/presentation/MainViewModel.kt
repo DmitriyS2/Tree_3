@@ -14,6 +14,8 @@ import com.sdv.main_feature.domain.usecase.GoToChildrenUseCase
 import com.sdv.main_feature.domain.usecase.GoToParentUseCase
 import com.sdv.main_feature.domain.usecase.SetFirstParentUseCase
 import com.sdv.main_feature.presentation.MainContract.Action
+import com.sdv.main_feature.presentation.MainContract.GRAND_PARENT
+import com.sdv.main_feature.presentation.MainContract.PARENT_NODE
 import com.sdv.main_feature.presentation.MainContract.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
@@ -51,6 +53,7 @@ internal class MainViewModel @Inject constructor(
             Action.MakeLogFileNull -> setState { it.copy(logFile = null) }
             Action.OnClickShareByEmail -> sendLogs(isMessenger = false)
             Action.OnClickShareByMessenger -> sendLogs(isMessenger = true)
+            Action.MakeTextErrorNull -> setState { it.copy(textError = null) }
         }
     }
 
@@ -98,6 +101,10 @@ internal class MainViewModel @Inject constructor(
 
     private fun goToParent() {
         viewModelScope.launch {
+            if (currentState.currentParent?.id == PARENT_NODE) {
+                setState { it.copy(textError = GRAND_PARENT) }
+                return@launch
+            }
             val newParentId = currentState.currentParent?.idParent ?: 0
             goToParentUseCase(newParentId)
         }
@@ -113,6 +120,10 @@ internal class MainViewModel @Inject constructor(
     private fun deleteNode(nodeUI: NodeUI?, fromParent: Boolean) {
         nodeUI?.let {
             viewModelScope.launch {
+                if (currentState.currentParent?.id == PARENT_NODE && fromParent) {
+                    setState { it.copy(textError = GRAND_PARENT) }
+                    return@launch
+                }
                 val newParentId =
                     if (fromParent) nodeUI.idParent else currentState.currentParent?.id ?: 0
                 deleteNodeUseCase(nodeUI, newParentId)
