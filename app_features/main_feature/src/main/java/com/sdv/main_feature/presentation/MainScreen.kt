@@ -43,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
+import com.sdv.common.orZero
 import com.sdv.main_feature.R
 import com.sdv.main_feature.presentation.MainContract.Action
 import com.sdv.main_feature.presentation.MainContract.State
@@ -81,6 +82,13 @@ internal fun MainScreen(
         }
     }
 
+    LaunchedEffect(key1 = state.textError) {
+        state.textError?.let {
+            showToast(state.textError, context)
+            onAction.invoke(Action.MakeTextErrorNull)
+        }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         floatingActionButton = {
@@ -104,7 +112,6 @@ internal fun MainScreen(
                 .fillMaxSize()
                 .padding(vertical = padding.calculateTopPadding(), horizontal = 8.dp)
         ) {
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -145,18 +152,12 @@ internal fun MainScreen(
                         )
                     }
                 }
-
-
             }
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp)
                     .clickable {
-                        if (state.currentParent?.id == 1L) {
-                            showToast(context.getString(R.string.root_element), context)
-                            return@clickable
-                        }
                         onAction.invoke(Action.OnClickGoToParent)
                     },
                 colors = CardDefaults.cardColors(
@@ -171,13 +172,9 @@ internal fun MainScreen(
                 ) {
                     IconButton(
                         modifier = Modifier
-                            .size(24.dp),
-                        //    .align(Alignment.End),
+                            .size(24.dp)
+                            .align(Alignment.End),
                         onClick = {
-                            if (state.currentParent?.id == 1L) {
-                                showToast(context.getString(R.string.root_element), context)
-                                return@IconButton
-                            }
                             onAction.invoke(Action.OnClickDeleteParent(state.currentParent))
                         }
                     ) {
@@ -190,24 +187,21 @@ internal fun MainScreen(
 
                     Text(
                         fontSize = 14.sp,
-                        text = stringResource(R.string.number, state.currentParent?.id ?: 0)
+                        text = stringResource(R.string.number, state.currentParent?.id.orZero())
                     )
                     Text(
                         fontSize = 14.sp,
-                        text = stringResource(R.string.name, state.currentParent?.name ?: "")
+                        text = stringResource(R.string.name, state.currentParent?.name.orEmpty())
                     )
                     Text(
                         fontSize = 14.sp,
-                        text = stringResource(
-                            R.string.count_parent,
-                            state.currentParent?.countParent ?: 0
-                        )
+                        text = stringResource(R.string.count_parent, state.currentParent?.countParent.orZero())
                     )
                     Text(
                         fontSize = 14.sp,
                         text = stringResource(
                             R.string.count_children,
-                            state.currentParent?.countChildren ?: 0
+                            state.currentParent?.countChildren.orZero()
                         )
                     )
                 }
@@ -271,7 +265,7 @@ internal fun MainScreen(
     }
 }
 
-fun showToast(text: String, context: Context) {
+internal fun showToast(text: String, context: Context) {
     Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
 }
 

@@ -15,6 +15,7 @@ internal object MainContract {
         data object OnClickShareByMessenger : Action
         data object OnClickShareByEmail : Action
         data object MakeLogFileNull : Action
+        data object MakeTextErrorNull : Action
     }
 
     data class State(
@@ -22,5 +23,9 @@ internal object MainContract {
         val currentChildren: List<NodeUI> = emptyList(),
         val logFile: File? = null,
         val sendByMessenger: Boolean = true,
+        val textError: String? = null,
     ) : MviState
+
+    const val PARENT_NODE = 1L
+    const val GRAND_PARENT = "Не получится. Это root-элемент"
 }
