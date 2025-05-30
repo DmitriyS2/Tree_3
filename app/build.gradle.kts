@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -31,6 +32,12 @@ android {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
+    }
+    applicationVariants.all {
+        val variantName = name
+        val apkName = "$variantName $versionName.apk"
+        outputs.map { it as BaseVariantOutputImpl }
+            .forEach { it.outputFileName = apkName }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
