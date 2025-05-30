@@ -1,3 +1,7 @@
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -14,7 +18,7 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = getVersionName()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -46,6 +50,14 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
+
+fun getVersionName(): String {
+    val date = DateTimeFormatter
+        .ofPattern("yyyy-MM-dd HH-mm")
+        .withZone(ZoneOffset.UTC)
+        .format(Instant.now())
+    return "1.1.1 $date"
 }
 
 dependencies {
