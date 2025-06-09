@@ -1,21 +1,21 @@
 [versions]
-agp = "8.6.1"
-kotlin = "1.9.0"
+agp = "8.10.1"
+kotlin = "2.1.21"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.8.7"
+lifecycleRuntimeKtx = "2.9.1"
 activityCompose = "1.10.1"
-composeBom = "2024.04.01"
-appcompat = "1.7.0"
+composeBom = "2025.06.00"
+appcompat = "1.7.1"
 material = "1.12.0"
-datastoreVersion = "1.1.1"
-hilt = "2.51.1"
-lifecycle = "2.8.7"
-roomKtx = "2.6.1"
-kspVersion = "1.9.0-1.0.13"
-navigationCompose = "2.8.4"
+datastoreVersion = "1.1.7"
+hilt = "2.56.2"
+lifecycle = "2.9.1"
+roomKtx = "2.7.1"
+kspVersion = "2.1.21-2.0.1"
+navigationCompose = "2.9.0"
 hiltVmVersion = "1.2.0"
 
 [libraries]
@@ -23,7 +23,6 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
@@ -68,4 +67,5 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = {id = "com.google.devtools.ksp", version.ref = "kspVersion"}
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 

@@ -7,4 +7,4 @@
 4. Сохраняется состояние дерева на устройстве и подтягивается при следующем входе
 5. Название формируется из 20 байт хэша id узла (Hex)
 
-Стек: Kotlin, Multi-module, MVI, Compose, Coroutine, Flow, Room, Hilt, DataStore
+Стек: Kotlin 2.1, Multi-module, MVI, Compose, Coroutine, Flow, Room, Hilt, DataStore
