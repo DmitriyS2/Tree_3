@@ -1,8 +1,15 @@
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import java.io.ByteArrayOutputStream
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -14,7 +21,7 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = getVersionName()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -27,6 +34,12 @@ android {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
+    }
+    applicationVariants.all {
+        val variantName = name
+        val apkName = "${variantName}_$versionName.apk"
+        outputs.map { it as BaseVariantOutputImpl }
+            .forEach { it.outputFileName = apkName }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -45,6 +58,33 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+}
+
+fun getVersionName(): String {
+    val date = DateTimeFormatter
+        .ofPattern("yyyy-MM-dd_HHmm")
+        .withZone(ZoneOffset.UTC)
+        .format(Instant.now())
+    val version = getWorkingBranch().split("/").lastOrNull()
+    return "${version}_$date"
+}
+
+fun getWorkingBranch(): String {
+    return "git rev-parse --abbrev-ref HEAD".runCommand()
+}
+
+fun String.runCommand(): String {
+    try {
+        return ByteArrayOutputStream().use {
+            exec {
+                commandLine(this@runCommand.split(" "))
+                standardOutput = it
+            }
+            String(it.toByteArray()).trim()
+        }
+    } catch (t: Throwable) {
+        throw GradleException("Error when runCommand: ${this@runCommand} - ${t.localizedMessage}")
     }
 }
 
@@ -75,7 +115,6 @@ dependencies {
     implementation(libs.bundles.datastore)
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
