@@ -1,4 +1,5 @@
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import java.io.ByteArrayOutputStream
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -35,7 +36,7 @@ android {
     }
     applicationVariants.all {
         val variantName = name
-        val apkName = "$variantName $versionName.apk"
+        val apkName = "${variantName}_$versionName.apk"
         outputs.map { it as BaseVariantOutputImpl }
             .forEach { it.outputFileName = apkName }
     }
@@ -61,10 +62,29 @@ android {
 
 fun getVersionName(): String {
     val date = DateTimeFormatter
-        .ofPattern("yyyy-MM-dd HH-mm")
+        .ofPattern("yyyy-MM-dd_HHmm")
         .withZone(ZoneOffset.UTC)
         .format(Instant.now())
-    return "1.1.1 $date"
+    val version = getWorkingBranch().split("/").lastOrNull()
+    return "${version}_$date"
+}
+
+fun getWorkingBranch(): String {
+    return "git rev-parse --abbrev-ref HEAD".runCommand()
+}
+
+fun String.runCommand(): String {
+    try {
+        return ByteArrayOutputStream().use {
+            exec {
+                commandLine(this@runCommand.split(" "))
+                standardOutput = it
+            }
+            String(it.toByteArray()).trim()
+        }
+    } catch (t: Throwable) {
+        throw GradleException("Error when runCommand: ${this@runCommand} - ${t.localizedMessage}")
+    }
 }
 
 dependencies {
