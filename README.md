@@ -9,4 +9,4 @@
 6. Все действия пользователя логируются и записываются на устройство
 7. Логи можно выгрузить и отправить через мессенджер или через email
 
-Стек: Kotlin, Multi-module, MVI, Compose, Coroutine, Flow, Room, Hilt, DataStore, Timber
+Стек: Kotlin 2.1, Multi-module, MVI, Compose, Coroutine, Flow, Room, Hilt, DataStore
