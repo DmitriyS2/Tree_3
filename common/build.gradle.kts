@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -9,7 +11,6 @@ android {
 
     defaultConfig {
         minSdk = 26
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -30,6 +31,16 @@ android {
 }
 
 dependencies {
+    //Logging
+    implementation(libs.timber)
+
+    //Joda Time
+    implementation(libs.joda.time)
+
+    // Dagger Hilt
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.viewmodel.android)
+    ksp(libs.hilt.compiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

@@ -2,7 +2,6 @@
 <resources>
     <string name="add">Добавить</string>
     <string name="parent">Родитель:</string>
-    <string name="root_element">Не получится. Это root-элемент</string>
     <string name="delete_parent">Удалить родителя</string>
     <string name="children">Дети:</string>
     <string name="delete_child">Удалить ребенка</string>
@@ -10,4 +9,6 @@
     <string name="name">Имя: %1$s</string>
     <string name="count_parent">Количество родителей: %1$d</string>
     <string name="count_children">Количество детей: %1$d</string>
+    <string name="logs_by_messenger">Поделиться логами через мессенджер</string>
+    <string name="logs_by_email">Поделиться логами через почту</string>
 </resources>

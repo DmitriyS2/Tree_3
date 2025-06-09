@@ -50,6 +50,9 @@ dependencies {
     implementation(libs.hilt.viewmodel.android)
     ksp(libs.hilt.compiler)
 
+    //Logging
+    implementation(libs.timber)
+
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)

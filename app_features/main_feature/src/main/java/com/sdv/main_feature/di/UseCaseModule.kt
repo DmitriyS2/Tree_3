@@ -8,6 +8,8 @@ import com.sdv.main_feature.domain.usecase.GetAllNodesUseCase
 import com.sdv.main_feature.domain.usecase.GetAllNodesUseCaseImpl
 import com.sdv.main_feature.domain.usecase.GetChildrenForParentByIdUseCase
 import com.sdv.main_feature.domain.usecase.GetChildrenForParentByIdUseCaseImpl
+import com.sdv.main_feature.domain.usecase.GetFileLogsUseCase
+import com.sdv.main_feature.domain.usecase.GetFileLogsUseCaseImpl
 import com.sdv.main_feature.domain.usecase.GetNodeByIdUseCase
 import com.sdv.main_feature.domain.usecase.GetNodeByIdUseCaseImpl
 import com.sdv.main_feature.domain.usecase.GoToChildrenUseCase
@@ -57,4 +59,8 @@ internal interface UseCaseModule {
     @Binds
     @Singleton
     fun bindGetAllNodesUseCase(impl: GetAllNodesUseCaseImpl): GetAllNodesUseCase
+
+    @Binds
+    @Singleton
+    fun bindGetFileLogsUseCase(impl: GetFileLogsUseCaseImpl): GetFileLogsUseCase
 }
