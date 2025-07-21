@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
@@ -215,48 +214,50 @@ internal fun MainScreen(
             )
 
             LazyColumn(modifier = Modifier.padding(bottom = 12.dp)) {
-                itemsIndexed(state.currentChildren) { _, item ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp)
-                            .clickable {
-                                onAction.invoke(Action.OnClickGoToChildren(item))
-                            },
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.White,
-                            contentColor = Color.Black
-                        )
-                    ) {
-                        Column(
+                state.currentChildren.forEach{ item ->
+                    item(key = item.id) {
+                        Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 8.dp, vertical = 8.dp)
+                                .padding(top = 8.dp)
+                                .clickable {
+                                    onAction.invoke(Action.OnClickGoToChildren(item))
+                                },
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White,
+                                contentColor = Color.Black
+                            )
                         ) {
-                            IconButton(
+                            Column(
                                 modifier = Modifier
-                                    .size(24.dp)
-                                    .align(Alignment.End),
-                                onClick = {
-                                    onAction.invoke(Action.OnClickDeleteChildren(item))
-                                }
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 8.dp, vertical = 8.dp)
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.Close,
-                                    contentDescription = stringResource(R.string.delete_child),
-                                    tint = Color.Red
+                                IconButton(
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .align(Alignment.End),
+                                    onClick = {
+                                        onAction.invoke(Action.OnClickDeleteChildren(item))
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = stringResource(R.string.delete_child),
+                                        tint = Color.Red
+                                    )
+                                }
+                                Text(fontSize = 12.sp, text = stringResource(R.string.number, item.id))
+                                Text(fontSize = 12.sp, text = stringResource(R.string.name, item.name))
+                                Text(
+                                    fontSize = 12.sp,
+                                    text = stringResource(R.string.count_parent, item.countParent)
+                                )
+                                Text(
+                                    fontSize = 12.sp,
+                                    text = stringResource(R.string.count_children, item.countChildren)
                                 )
                             }
-                            Text(fontSize = 12.sp, text = stringResource(R.string.number, item.id))
-                            Text(fontSize = 12.sp, text = stringResource(R.string.name, item.name))
-                            Text(
-                                fontSize = 12.sp,
-                                text = stringResource(R.string.count_parent, item.countParent)
-                            )
-                            Text(
-                                fontSize = 12.sp,
-                                text = stringResource(R.string.count_children, item.countChildren)
-                            )
                         }
                     }
                 }
