@@ -1,10 +1,8 @@
 package com.sdv.main_feature.presentation
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -78,13 +76,6 @@ internal fun MainScreen(
             onAction.invoke(Action.MakeLogFileNull)
             val shareIntent = Intent.createChooser(intent, null)
             context.startActivity(shareIntent)
-        }
-    }
-
-    LaunchedEffect(key1 = state.textError) {
-        state.textError?.let {
-            showToast(state.textError, context)
-            onAction.invoke(Action.MakeTextErrorNull)
         }
     }
 
@@ -214,7 +205,7 @@ internal fun MainScreen(
             )
 
             LazyColumn(modifier = Modifier.padding(bottom = 12.dp)) {
-                state.currentChildren.forEach{ item ->
+                state.currentChildren.forEach { item ->
                     item(key = item.id) {
                         Card(
                             modifier = Modifier
@@ -264,10 +255,6 @@ internal fun MainScreen(
             }
         }
     }
-}
-
-internal fun showToast(text: String, context: Context) {
-    Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
 }
 
 @Preview(showBackground = true)

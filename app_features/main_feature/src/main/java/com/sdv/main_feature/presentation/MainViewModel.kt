@@ -17,6 +17,7 @@ import com.sdv.main_feature.presentation.MainContract.Action
 import com.sdv.main_feature.presentation.MainContract.GRAND_PARENT
 import com.sdv.main_feature.presentation.MainContract.PARENT_NODE
 import com.sdv.main_feature.presentation.MainContract.State
+import com.sdv.main_feature.presentation.MainContract.Effect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -34,7 +35,7 @@ internal class MainViewModel @Inject constructor(
     private val goToChildrenUseCase: GoToChildrenUseCase,
     private val getAllNodesUseCase: GetAllNodesUseCase,
     private val getFileLogsUseCase: GetFileLogsUseCase,
-) : MviViewModel<State, Action>() {
+) : MviViewModel<State, Action, Effect>() {
 
     init {
         loadData()
@@ -53,7 +54,6 @@ internal class MainViewModel @Inject constructor(
             Action.MakeLogFileNull -> setState { it.copy(logFile = null) }
             Action.OnClickShareByEmail -> sendLogs(isMessenger = false)
             Action.OnClickShareByMessenger -> sendLogs(isMessenger = true)
-            Action.MakeTextErrorNull -> setState { it.copy(textError = null) }
         }
     }
 
@@ -102,7 +102,7 @@ internal class MainViewModel @Inject constructor(
     private fun goToParent() {
         viewModelScope.launch {
             if (currentState.currentParent?.id == PARENT_NODE) {
-                setState { it.copy(textError = GRAND_PARENT) }
+                setEffect(Effect.ShowToast(GRAND_PARENT))
                 return@launch
             }
             val newParentId = currentState.currentParent?.idParent ?: 0
@@ -121,7 +121,7 @@ internal class MainViewModel @Inject constructor(
         nodeUI?.let {
             viewModelScope.launch {
                 if (currentState.currentParent?.id == PARENT_NODE && fromParent) {
-                    setState { it.copy(textError = GRAND_PARENT) }
+                    setEffect(Effect.ShowToast(GRAND_PARENT))
                     return@launch
                 }
                 val newParentId =
