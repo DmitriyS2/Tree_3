@@ -51,9 +51,8 @@ internal class MainViewModel @Inject constructor(
             is Action.OnClickGoToChildren -> goToChildren(action.nodeUI)
             is Action.OnClickDeleteChildren -> deleteNode(action.nodeUI, false)
             is Action.OnClickDeleteParent -> deleteNode(action.nodeUI, true)
-            Action.MakeLogFileNull -> setState { it.copy(logFile = null) }
-            Action.OnClickShareByEmail -> sendLogs(isMessenger = false)
-            Action.OnClickShareByMessenger -> sendLogs(isMessenger = true)
+            Action.OnClickShareByEmail -> sendLogs(sendingByMessenger = false)
+            Action.OnClickShareByMessenger -> sendLogs(sendingByMessenger = true)
         }
     }
 
@@ -131,10 +130,10 @@ internal class MainViewModel @Inject constructor(
         }
     }
 
-    private fun sendLogs(isMessenger: Boolean) {
+    private fun sendLogs(sendingByMessenger: Boolean) {
         viewModelScope.launch {
             val logFile = getFileLogsUseCase()
-            setState { it.copy(logFile = logFile, sendByMessenger = isMessenger) }
+            setEffect(Effect.SendLogFile(file = logFile, sendingByMessenger = sendingByMessenger))
         }
     }
 }

@@ -1,12 +1,13 @@
 package com.sdv.main_feature
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sdv.common.log.util.sendLog
+import com.sdv.common.util.showToast
 import com.sdv.main_feature.presentation.MainContract
 import com.sdv.main_feature.presentation.MainScreen
 import com.sdv.main_feature.presentation.MainViewModel
@@ -25,13 +26,10 @@ fun MainFeatureRoute(padding: PaddingValues) {
     )
 
     LaunchedEffect(Unit) {
-        val toast: Toast = Toast.makeText(context, "", Toast.LENGTH_SHORT)
         viewModel.effect.collect { effect ->
             when (effect) {
-                is MainContract.Effect.ShowToast -> toast.apply {
-                    setText(effect.text)
-                    show()
-                }
+                is MainContract.Effect.ShowToast -> effect.text.showToast(context)
+                is MainContract.Effect.SendLogFile -> sendLog(context, effect.file, effect.sendingByMessenger)
             }
         }
     }

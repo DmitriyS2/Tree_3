@@ -1,8 +1,6 @@
 package com.sdv.main_feature.presentation
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,17 +28,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.FileProvider
-import com.sdv.common.orZero
+import com.sdv.common.util.orZero
 import com.sdv.main_feature.R
 import com.sdv.main_feature.presentation.MainContract.Action
 import com.sdv.main_feature.presentation.MainContract.State
@@ -53,31 +48,6 @@ internal fun MainScreen(
     onAction: (Action) -> Unit,
     padding: PaddingValues,
 ) {
-
-    val context = LocalContext.current
-
-    LaunchedEffect(key1 = state.logFile) {
-        state.logFile?.let { file ->
-            val uri = FileProvider.getUriForFile(context, "UploadLogs", file)
-            val intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                putExtra(Intent.EXTRA_STREAM, uri)
-                setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            if (state.sendByMessenger) { //messenger
-                intent.type = "*/*"
-            } else { //email
-                val emailSelectorIntent = Intent(Intent.ACTION_SENDTO)
-                emailSelectorIntent.setData(Uri.parse("mailto:"))
-                intent.selector = emailSelectorIntent
-            }
-
-            onAction.invoke(Action.MakeLogFileNull)
-            val shareIntent = Intent.createChooser(intent, null)
-            context.startActivity(shareIntent)
-        }
-    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
