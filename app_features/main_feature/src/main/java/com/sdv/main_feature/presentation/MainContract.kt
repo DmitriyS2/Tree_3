@@ -1,6 +1,7 @@
 package com.sdv.main_feature.presentation
 
 import com.sdv.base_feature.MviAction
+import com.sdv.base_feature.MviEffect
 import com.sdv.base_feature.MviState
 import com.sdv.main_feature.domain.model.NodeUI
 import java.io.File
@@ -14,17 +15,17 @@ internal object MainContract {
         data class OnClickDeleteChildren(val nodeUI: NodeUI?) : Action
         data object OnClickShareByMessenger : Action
         data object OnClickShareByEmail : Action
-        data object MakeLogFileNull : Action
-        data object MakeTextErrorNull : Action
     }
 
     data class State(
         val currentParent: NodeUI? = null,
         val currentChildren: List<NodeUI> = emptyList(),
-        val logFile: File? = null,
-        val sendByMessenger: Boolean = true,
-        val textError: String? = null,
     ) : MviState
+
+    sealed interface Effect : MviEffect {
+        data class ShowToast(val text: String) : Effect
+        data class SendLogFile(val file: File, val sendingByMessenger: Boolean) : Effect
+    }
 
     const val PARENT_NODE = 1L
     const val GRAND_PARENT = "Не получится. Это root-элемент"

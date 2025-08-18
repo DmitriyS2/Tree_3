@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-abstract class MviViewModel<S : MviState, A : MviAction> : ViewModel() {
+abstract class MviViewModel<S : MviState, A : MviAction, E : MviEffect> : ViewModel() {
 
     private val initialState: S by lazy { initialState() }
 
@@ -18,6 +18,9 @@ abstract class MviViewModel<S : MviState, A : MviAction> : ViewModel() {
 
     private val _action: MutableSharedFlow<A> = MutableSharedFlow()
     val action get() = _action.asSharedFlow()
+
+    private val _effect = MutableSharedFlow<E>()
+    val effect get() = _effect.asSharedFlow()
 
     val currentState: S get() = state.value
 
@@ -35,6 +38,10 @@ abstract class MviViewModel<S : MviState, A : MviAction> : ViewModel() {
 
     fun setState(reduce: (S) -> S) {
         _state.update { reduce(it) }
+    }
+
+    fun setEffect(effect: E) {
+        viewModelScope.launch { _effect.emit(effect) }
     }
 
     private fun subscribeEvents() {
