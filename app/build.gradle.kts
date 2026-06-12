@@ -74,7 +74,14 @@ fun getVersionName(): String {
 }
 
 fun getWorkingBranch(): String {
-    return "git rev-parse --abbrev-ref HEAD".runCommand()
+    val githubHeadRef = System.getenv("GITHUB_HEAD_REF")
+    val githubRef = System.getenv("GITHUB_REF_NAME")
+
+    return when {
+        !githubHeadRef.isNullOrEmpty() -> githubHeadRef
+        !githubRef.isNullOrEmpty() -> githubRef
+        else -> "git rev-parse --abbrev-ref HEAD".runCommand()
+    }
 }
 
 fun String.runCommand(): String {
