@@ -15,7 +15,7 @@ plugins {
 
 android {
     namespace = "com.sdv.tree3"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.sdv.tree3"
@@ -48,9 +48,6 @@ android {
     }
     buildFeatures {
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
     }
     packaging {
         resources {
