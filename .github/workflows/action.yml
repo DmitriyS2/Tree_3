@@ -32,14 +32,4 @@ jobs:
           path: app/build/outputs/apk/debug/*.apk
 
       - name: Show APK filename
-        run: |
-           shopt -s nullglob
-           apk_files=(*.apk)
-          if [ ${#apk_files[@]} -eq 0 ]; then
-             echo "No APK files found"
-          else
-             echo "APK files found:"
-             for file in "${apk_files[@]}"; do
-              echo "$file"
-             done
-          fi
+        run: if ls *.apk 2>/dev/null; then echo "APK files found"; else echo "No APK files found"; fi
