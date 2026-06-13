@@ -32,4 +32,6 @@ jobs:
           path: app/build/outputs/apk/debug/*.apk
 
       - name: Show APK filename
-        run: if ls *.apk 2>/dev/null; then echo "APK files found"; else echo "No APK files found"; fi
+        run: |
+          echo "APK files found:"
+          ls app/build/outputs/apk/debug/*.apk | xargs -n1 basename
