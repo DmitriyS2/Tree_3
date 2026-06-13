@@ -33,5 +33,10 @@ jobs:
 
       - name: Show APK filename
         run: |
-          echo "APK files found:"
-          ls -la app/build/outputs/apk/debug/
+          apk_files=$(ls *.apk 2>/dev/null)
+          if [ -n "$apk_files" ]; then
+            echo "APK files found:"
+            echo "$apk_files"
+          else
+            echo "No APK files found"
+          fi
