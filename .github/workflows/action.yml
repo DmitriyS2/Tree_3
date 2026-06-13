@@ -34,4 +34,4 @@ jobs:
       - name: Show APK filename
         run: |
           echo "APK files found:"
-          ls -la app/build/outputs/apk/debug/
+          ls app/build/outputs/apk/debug/*.apk | xargs -n1 basename
