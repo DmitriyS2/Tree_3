@@ -1,4 +1,5 @@
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.ByteArrayOutputStream
 import java.time.Instant
 import java.time.ZoneOffset
@@ -19,7 +20,7 @@ android {
     defaultConfig {
         applicationId = "com.sdv.tree3"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = getVersionName()
 
@@ -45,9 +46,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
     buildFeatures {
         compose = true
     }
@@ -58,6 +56,11 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+}
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 
@@ -71,7 +74,14 @@ fun getVersionName(): String {
 }
 
 fun getWorkingBranch(): String {
-    return "git rev-parse --abbrev-ref HEAD".runCommand()
+    val githubHeadRef = System.getenv("GITHUB_HEAD_REF")
+    val githubRef = System.getenv("GITHUB_REF_NAME")
+
+    return when {
+        !githubHeadRef.isNullOrEmpty() -> githubHeadRef
+        !githubRef.isNullOrEmpty() -> githubRef
+        else -> "git rev-parse --abbrev-ref HEAD".runCommand()
+    }
 }
 
 fun String.runCommand(): String {
