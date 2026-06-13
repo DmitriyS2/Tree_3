@@ -33,10 +33,13 @@ jobs:
 
       - name: Show APK filename
         run: |
-          apk_files=$(ls *.apk 2>/dev/null)
-          if [ -n "$apk_files" ]; then
-            echo "APK files found:"
-            echo "$apk_files"
+           shopt -s nullglob
+           apk_files=(*.apk)
+          if [ ${#apk_files[@]} -eq 0 ]; then
+             echo "No APK files found"
           else
-            echo "No APK files found"
+             echo "APK files found:"
+             for file in "${apk_files[@]}"; do
+              echo "$file"
+             done
           fi
