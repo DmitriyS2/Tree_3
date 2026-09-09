@@ -23,8 +23,10 @@ class Tree3Application : Application() {
     override fun onCreate() {
         super.onCreate()
         setupLogger()
-        Timber.plant(DebugTree(), fileLogs)
-        fileLogs?.deleteOldLogs()
+        fileLogs?.let {
+            Timber.plant(DebugTree(), it)
+            it.deleteOldLogs()
+        } ?: Timber.plant(DebugTree())
     }
 
     private fun setupLogger() {
