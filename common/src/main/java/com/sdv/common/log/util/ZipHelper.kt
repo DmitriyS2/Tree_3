@@ -25,7 +25,7 @@ object ZipHelper {
                 for (file in files) {
                     fi = FileInputStream(file)
                     origin = BufferedInputStream(fi, BUFFER_SIZE)
-                    try {
+                    origin.use { origin ->
                         val entry = ZipEntry(file.name)
                         out.putNextEntry(entry)
                         var count: Int
@@ -34,8 +34,6 @@ object ZipHelper {
                             }) != -1) {
                             out.write(buffer, 0, count)
                         }
-                    } finally {
-                        origin.close()
                     }
                 }
             }
@@ -44,7 +42,7 @@ object ZipHelper {
         } finally {
             if (fi != null) {
                 try {
-                    fi!!.close()
+                    fi.close()
                 } catch (e: IOException) {
                     "Error".logError(TAG, e)
                 }

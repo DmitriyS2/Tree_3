@@ -1,13 +1,11 @@
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.io.ByteArrayOutputStream
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
@@ -15,12 +13,12 @@ plugins {
 
 android {
     namespace = "com.sdv.tree3"
-    compileSdk = 36
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.sdv.tree3"
-        minSdk = 26
-        targetSdk = 35
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = getVersionName()
 
@@ -36,15 +34,10 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-    applicationVariants.all {
-        val variantName = name
-        val apkName = "${variantName}_$versionName.apk"
-        outputs.map { it as BaseVariantOutputImpl }
-            .forEach { it.outputFileName = apkName }
-    }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     buildFeatures {
         compose = true
@@ -55,9 +48,20 @@ android {
         }
     }
 }
+androidComponents {
+    onVariants { variant ->
+        val variantName = variant.name
+        val versionName = getVersionName()
+        val apkName = "${variantName}_${versionName}.apk"
+
+        variant.outputs.forEach { output ->
+            (output as? BaseVariantOutputImpl)?.outputFileName = apkName
+        }
+    }
+}
 kotlin {
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_17)
+        jvmTarget.set(JvmTarget.JVM_21)
     }
 }
 
@@ -81,17 +85,33 @@ fun getWorkingBranch(): String {
     }
 }
 
+//fun String.runCommand(project: Project): String {
+//    try {
+//        return ByteArrayOutputStream().use { output ->
+//            project.exec {
+//                commandLine(this@runCommand.split(" "))
+//                standardOutput = output
+//            }
+//            String(output.toByteArray()).trim()
+//        }
+//    } catch (t: Throwable) {
+//        throw GradleException("Error when runCommand: ${this@runCommand} - ${t.localizedMessage}")
+//    }
+//}
+
 fun String.runCommand(): String {
-    try {
-        return ByteArrayOutputStream().use {
-            exec {
-                commandLine(this@runCommand.split(" "))
-                standardOutput = it
-            }
-            String(it.toByteArray()).trim()
+    return try {
+        val process = ProcessBuilder(*this.split(" ").toTypedArray())
+            .redirectErrorStream(true)
+            .start()
+        val output = process.inputStream.bufferedReader().readText()
+        val exitCode = process.waitFor()
+        if (exitCode != 0) {
+            throw GradleException("Command failed with exit code $exitCode: $this")
         }
+        output.trim()
     } catch (t: Throwable) {
-        throw GradleException("Error when runCommand: ${this@runCommand} - ${t.localizedMessage}")
+        throw GradleException("Error when runCommand: $this - ${t.localizedMessage}")
     }
 }
 
